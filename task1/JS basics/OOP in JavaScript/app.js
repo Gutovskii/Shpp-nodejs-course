@@ -1,23 +1,3 @@
-// Tests
-
-const sizes = ['XS', 'S', 'M']
-const images = ['url1', 'url2', 'url3']
-
-const Jacket = new Clothes(1, 'Jacket', 'Awesome super jacket', 300, 'Adidas', 30, '30.12.2003', [], images, sizes, 'S', 'Leather', 'Black')
-const Gloves = new Clothes(2, 'Gloves', 'Amazing super gloves', 100, 'Nike', 42, '12.10.2005', [], images, sizes, 'XL', 'Zamsha', 'Pink')
-const Pants = new Clothes(3, 'Pants', 'Cool mega pants', 200, 'Adidas', 24, '14.10.2021', [], images, sizes, 'L', 'Cotton', 'Yellow')
-
-const WashingMachine = new Electronics(1, 'Washing Machine', 'Omega Powerful Washing Machine', 1000, 'Puma', 10, '10.10.2010', [], images, '11.11.2111', '300A')
-const Microwave = new Electronics(2, 'Microwave', 'Incredibly Fast Microwave', 500, 'Samsung', 1, '08.08.2008', [], images, '20.20.2020', '100A')
-
-console.log(AbstractProduct.prototype.searchProducts([Jacket, Gloves, Pants], 'super', ['description'])) // Jacket, Gloves
-console.log(AbstractProduct.prototype.sortProducts([WashingMachine, Microwave], 'price')) // Microwave, WashingMachine
-
-console.log(WashingMachine.getSet('get', 'description')) // Omega Powerful Washing Machine
-
-Gloves.getSet('set', 'price', 150) // before Gloves.price = 100
-console.log(Gloves.getSet('get', 'price')) // 150
-
 // Code
 
 const AbstractProduct = function(ID, name, description, price, brand, quantity, date, reviews, images) {
@@ -231,5 +211,23 @@ const Electronics = function(ID, name, description, price, brand, quantity, date
 Electronics.prototype = Object.create(AbstractProduct.prototype)
 Electronics.prototype.constructor = Electronics
 
+// Tests
 
+const sizes = ['XS', 'S', 'M']
+const images = ['url1', 'url2', 'url3']
+
+const Jacket = new Clothes(1, 'Jacket', 'Awesome super jacket', 300, 'Adidas', 30, '30.12.2003', [], images, sizes, 'S', 'Leather', 'Black')
+const Gloves = new Clothes(2, 'Gloves', 'Amazing super gloves', 100, 'Nike', 42, '12.10.2005', [], images, sizes, 'XL', 'Zamsha', 'Pink')
+const Pants = new Clothes(3, 'Pants', 'Cool mega pants', 200, 'Adidas', 24, '14.10.2021', [], images, sizes, 'L', 'Cotton', 'Yellow')
+
+const WashingMachine = new Electronics(1, 'Washing Machine', 'Omega Powerful Washing Machine', 1000, 'Puma', 10, '10.10.2010', [], images, '11.11.2111', '300A')
+const Microwave = new Electronics(2, 'Microwave', 'Incredibly Fast Microwave', 500, 'Samsung', 1, '08.08.2008', [], images, '20.20.2020', '100A')
+
+console.log(AbstractProduct.prototype.searchProducts([Jacket, Gloves, Pants], 'super', ['description'])) // Jacket, Gloves
+console.log(AbstractProduct.prototype.sortProducts([WashingMachine, Microwave], 'price')) // Microwave, WashingMachine
+
+console.log(WashingMachine.getSet('get', 'description')) // Omega Powerful Washing Machine
+
+Gloves.getSet('set', 'price', 150) // before Gloves.price = 100
+console.log(Gloves.getSet('get', 'price')) // 150
 
