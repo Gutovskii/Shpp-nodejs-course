@@ -26,7 +26,7 @@ Accept: */*
 Content-Type: application/x-www-form-urlencoded
 User-Agent: Mozilla/4.0
 Content-Length: 35
-login=student&password=12345
+?login=student&password=12345
 `,
     5: `GET / HTTP/1.1
 Host: student.shpp.me
