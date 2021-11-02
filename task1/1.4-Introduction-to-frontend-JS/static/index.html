@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Intorduction to frontend JS</title>
+</head>
+<body>
+    <div class="container">
+        <div id="black" class="square"></div>
+        <div id="black" class="figure"></div>
+        <div id="black" class="kvadrat"></div>
+        <div id="black" class="square figure"></div>
+        <div id="black" class="square"></div>
+    </div>
+
+    <button class="delete">Delete squares</button>
+
+    <div class="container">
+        <button class="selector-btn">Show squares with selector: </button>
+        <input type="text" class="selector-input">
+    </div>
+
+    <div id="yellow"></div>
+
+    <div class="container">
+        <button class="show-btn">Show red square</button>
+        <div id="red" class="hidden"></div>
+    </div>
+
+    <div class="container">
+        <input type="text" class="show-input">
+        <div id="green" class="hidden"></div>
+    </div>
+
+    <div class="container">
+        <input type="text" class="url-input">
+        <button class="url-btn">Show image</button>
+        <img class="url-img">
+    </div>
+
+    <div class="container">
+        <textarea class="img-textarea" cols="30" rows="10"></textarea>
+        <button class="img-btn">Show images</button>
+        <div class="images-container"></div>
+    </div>
+
+    <div class="absolute-block">
+        <div class="mouse-info">
+            <div class="mouse-x">Y: 0</div>
+            <div class="mouse-y">X: 0</div>
+            <div class="user-locale">Locale: none</div>
+            <div class="user-sh">Ш: null</div>
+            <div class="user-d">Д: null</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <textarea class="localStorage-textarea" placeholder="localStorage" cols="20" rows="10"></textarea>
+        <textarea class="cookie-textarea" placeholder="cookie" cols="20" rows="10"></textarea>
+        <textarea class="sessionCookie-textarea" placeholder="sessionCookie" cols="20" rows="10"></textarea>
+    </div>
+    
+    <button class="on-top unvisible">Наверх</button>
+
+    <div class="container">
+        <div id="blue">
+            <div id="orange"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <button class="open-modal">Открыть прозрачный квадрат на весь экран</button>
+    </div>
+    <div class="modal"></div>
+
+    <div class="container">
+        <form class="form-disabled">
+            <input type="submit" value="GO">
+        </form>
+    </div>
+
+    <div class="container">
+        <input class="input-file" type="file">
+    </div>
+
+    <script src="cookies.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

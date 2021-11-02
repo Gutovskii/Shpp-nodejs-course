@@ -1,0 +1,98 @@
+* {
+    margin: 0;
+}
+
+button {
+    cursor: pointer;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.absolute-block {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.mouse-info {
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+#black {
+    width: 100px;
+    height: 100px;
+    background-color: black;
+    margin-right: 10px;
+}
+
+#yellow {
+    width: 100px;
+    height: 100px;
+    background-color: yellow;
+    margin-top: 10px;
+}
+
+#red {
+    width: 50px;
+    height: 50px;
+    background-color: red;
+}
+
+#green {
+    width: 50px;
+    height: 20px;
+    background-color: green;
+}
+
+#blue {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    background-color: blue;
+}
+
+#orange {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background-color: orange;
+}
+
+.delete {
+    margin-top: 10px;
+}
+
+.hidden {
+    opacity: 0;
+}
+
+.unvisible {
+    visibility: hidden;
+}
+
+.visible {
+    visibility: visible;
+}
+
+.on-top {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    opacity: .7;
+}
