@@ -1,13 +1,9 @@
-const path = require('path')
 const express = require('express')
 const nodeFetch = require('node-fetch')
 
 const app = express()
 
 const PORT: number = 3000
-
-app.set('view engine', 'ejs')
-app.set('views', path.resolve('ejs'))
 
 // 1
 interface IGetIp {
