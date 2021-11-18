@@ -1,27 +1,25 @@
-const path = require('path')
-const express = require('express')
 const nodeFetch = require('node-fetch')
-
-const app = express()
-
-const PORT: number = 3000
-
-app.set('view engine', 'ejs')
-app.set('views', path.resolve('ejs'))
 
 // 1
 interface IGetIp {
     ip: string
 }
 
-async function getIp(url: string): Promise<IGetIp> {
+async function getIp(url: string, callback: (ip: string) => void): Promise<IGetIp> {
     const req: Response = await nodeFetch(url)
     const res: IGetIp = await req.json()
-    console.log(res.ip)
+    callback(returnIp(res))
     return res
 }
 
-getIp('https://api.ipify.org/?format=json')
+getIp('https://api.ipify.org/?format=json', (ip) => {
+    console.log(`1: ${ip}`)
+})
+
+// 2
+function returnIp(ipData: IGetIp): string {
+    return ipData.ip
+}
 
 // 3
 interface IGetRandomName {
@@ -86,7 +84,6 @@ for (let i: number = 0; i < reqArray.length; i++) {
 }
 
 // 4
-
 interface IUserData {
     gender: string
 }
@@ -130,4 +127,31 @@ async function getFemaleUserAsyncAwait(url: string) {
 
 getFemaleUserPromises('https://random-data-api.com/api/users/random_user')
 
-app.listen(PORT)
+// 5
+function cbFunc5(ip: string, callback: (ip: string) => void) {
+    callback(`5: ${ip}`)
+}
+
+async function awaitFunc(url: string) {
+    const req: Response = await nodeFetch(url)
+    const res: IGetIp = await req.json()
+    cbFunc5(res.ip, (ip) => {console.log(ip)})
+}
+
+awaitFunc('https://api.ipify.org/?format=json')
+
+// 6
+async function asyncReturnIp(ip: string): Promise<string> {
+    return ip
+}
+
+async function doSth(callback: (url: string) => Promise<string>) {
+    const req: Response = await nodeFetch('https://api.ipify.org/?format=json')
+    const res: IGetIp = await req.json()
+    const ip = await callback(res.ip)
+    console.log(`6: ${ip}`)
+}
+
+doSth((ip): Promise<string> => {
+    return asyncReturnIp(ip)
+})
