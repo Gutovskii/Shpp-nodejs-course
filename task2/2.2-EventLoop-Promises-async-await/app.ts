@@ -1,5 +1,4 @@
 const nodeFetch = require('node-fetch')
-
 // 1
 interface IGetIp {
     ip: string
