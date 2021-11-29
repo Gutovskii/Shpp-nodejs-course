@@ -12,4 +12,6 @@ server.on('message', (msg, rinfo) => {
     server.send(msg, rinfo.port, 'localhost')
 })
 
-server.bind(3000)
+server.bind(3000, () => {
+    console.log('Сервер запустился...')
+})

@@ -4,12 +4,12 @@ const client = dgram.createSocket('udp4')
 
 let connectionTime
 
-client.send('Привет', 3000, 'localhost', () => {
+client.send('Привет', 3000, () => {
     connectionTime = new Date().getTime()
     console.log('Отсылаем "Привет" серверу')
 })
 
-client.on('message', (msg, rinfo) => {
+client.on('message', msg => {
     const dataResponseBeginningTime = new Date().getTime()
     
     console.log(`Server > ${msg.toString()}`)
