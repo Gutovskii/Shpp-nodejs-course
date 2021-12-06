@@ -1,0 +1,19 @@
+{
+	"tasks": [
+		{
+			"text": "First Item",
+			"id": "8c90d6fe2b18b6e919fb",
+			"checked": false
+		},
+		{
+			"text": "Second Item",
+			"id": "35a5a2efa380ce5d82bb",
+			"checked": false
+		},
+		{
+			"text": "Third Item",
+			"id": "a4ef93ddabad53bb5d41",
+			"checked": false
+		}
+	]
+}
