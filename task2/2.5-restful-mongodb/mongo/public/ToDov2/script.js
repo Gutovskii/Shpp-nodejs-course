@@ -49,17 +49,14 @@ let vue = new Vue({
 			editable: false,
 			checked: false
 		},
-		items: [{
-			inputedit: '',
-			checked: false,
-		}]
+		items: []
 	},
 	methods: {
 		getItems: function(){
 			fetch(url + '/getItems', {credentials: 'include'})
 				.then(res => res.json())
 				.then(response => {
-					this.items = response.tasks.map((item) => {
+					this.items = response.items.map((item) => {
 						item.editable = false;
 						return item;
 					})
@@ -113,7 +110,11 @@ let vue = new Vue({
 				},
 			}).then(res => res.json())
 				.then((response) => {
-				this.getItems()
+					if(response['ok'] === true){
+						this.getItems()
+					} else {
+						alert("Error 500. Internal server error. Please try again later")
+					}
 			});
 		},
 		del(index){
