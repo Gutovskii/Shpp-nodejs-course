@@ -1,14 +1,17 @@
-const express = require('express')
-const session = require('express-session')
+import express from 'express'
+import session from 'express-session'
+import sessionFileStore from 'session-file-store'
 
-const items = require('./router/items')
-const auth = require('./router/auth')
+import items from './router/items'
+import auth from './router/auth'
 
 const app = express()
 
+const FileStore = sessionFileStore(session)
+
 app.use(session({
+    store: new FileStore({retries: 0}),
     secret: 'omegasuperpowerfulsecret',
-    name: 'sid',
     resave: false,
     saveUninitialized: false
 }))

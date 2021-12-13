@@ -1,21 +1,109 @@
 {
 	"users": [
-		{"_id": "993", "login": "Vova", "pass": "zxcmutant1", "tasks": [
-			{
-				"text": "First Item",
-				"_id": "8c90d6fe2b18b6e919fb",
-				"checked": false
-			},
-			{
-				"text": "Second Item",
-				"_id": "35a5a2efa380ce5d82bb",
-				"checked": false
-			},
-			{
-				"text": "Third Item",
-				"_id": "a4ef93ddabad53bb5d41",
-				"checked": false
-			}
-		]}
+		{
+			"_id": "993",
+			"login": "Vova",
+			"pass": "zxcmutant",
+			"tasks": [
+				{
+					"_id": "ee9adaf4735c6c3575b6",
+					"text": "Цемнуть Маму",
+					"checked": true
+				},
+				{
+					"_id": "4cadfb9170bb5d6c972b",
+					"text": "Выпить чай",
+					"checked": true
+				},
+				{
+					"_id": "ae4f3dd163fb589bd4ec",
+					"text": "Выгулять кота соседа",
+					"checked": true
+				}
+			]
+		},
+		{
+			"_id": "d2acea669ce8097763aaee1eab5253db",
+			"login": "Lena",
+			"pass": "12345",
+			"tasks": [
+				{
+					"_id": "c2f2a3d2e80f6d6cc5b2",
+					"text": "Цемнуть Вову",
+					"checked": true
+				}
+			]
+		},
+		{
+			"_id": "b63c1c3579e26760b333c58e6d022c78",
+			"login": "User1",
+			"pass": "11111",
+			"tasks": [
+				{
+					"_id": "057af3dec48428587e92",
+					"text": "a",
+					"checked": false
+				},
+				{
+					"_id": "49c8a5cf77124557a33a",
+					"text": "b",
+					"checked": true
+				},
+				{
+					"_id": "57742c1588a2877f8596",
+					"text": "c",
+					"checked": false
+				}
+			]
+		},
+		{
+			"_id": "46d8a99b94149ea5d53a5bac7a67cb83",
+			"login": "User2",
+			"pass": "11111",
+			"tasks": [
+				{
+					"_id": "6f794de9425f0c1321be",
+					"text": "c",
+					"checked": false
+				},
+				{
+					"_id": "279cb4cc4250743411b9",
+					"text": "b",
+					"checked": false
+				},
+				{
+					"_id": "326010082ea04a26187e",
+					"text": "a",
+					"checked": true
+				}
+			]
+		},
+		{
+			"_id": "dbb685c84f26a57a0bcd65287568f29c",
+			"login": "User3",
+			"pass": "11111",
+			"tasks": [
+				{
+					"_id": "54503d953692e0698cc1",
+					"text": "b",
+					"checked": true
+				},
+				{
+					"_id": "3fdb14128cab75884ccd",
+					"text": "i",
+					"checked": true
+				},
+				{
+					"_id": "71e20273afe26f4a4b73",
+					"text": "b",
+					"checked": true
+				},
+				{
+					"_id": "a467164d642cc5cf7942",
+					"text": "a",
+					"checked": true
+				}
+			]
+		}
 	]
 }
