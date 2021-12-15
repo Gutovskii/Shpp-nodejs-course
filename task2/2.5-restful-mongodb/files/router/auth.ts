@@ -1,13 +1,19 @@
-import express from 'express'
-const router = express.Router()
-
 import { 
     login,
     register,
     logout } from '../controllers/auth'
 
-router.route('/login').post(login)
-router.route('/register').post(register)
-router.route('/logout').post(logout)
+export const authRouter = (req: any, res: any, next: any) => {
+    switch (req.query.action) {
+        case 'login':
+            return login(req, res)
+        case 'register':
+            return register(req, res)
+        case 'logout':
+            return logout(req, res)
+        default:
+            next()
+    }
+}
 
-export default router
+export default authRouter

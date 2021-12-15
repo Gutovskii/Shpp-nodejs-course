@@ -2,8 +2,9 @@ import express from 'express'
 import session from 'express-session'
 import sessionFileStore from 'session-file-store'
 
-import items from './router/items'
-import auth from './router/auth'
+import { getItems } from './controllers/items'
+import itemsRouter from './router/items'
+import authRouter from './router/auth'
 
 const app = express()
 
@@ -18,7 +19,10 @@ app.use(session({
 
 app.use(express.json())
 app.use(express.static('public'))
-app.use('/api/v1', items, auth)
+
+app.get('/api/v2/router', getItems)
+app.post('/api/v2/router', itemsRouter)
+app.post('/api/v2/router', authRouter)
 
 const port = 3000
 

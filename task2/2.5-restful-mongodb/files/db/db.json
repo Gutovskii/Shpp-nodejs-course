@@ -16,7 +16,7 @@
 					"checked": true
 				},
 				{
-					"_id": "ae4f3dd163fb589bd4ec",
+					"_id": "74ce930b1e702ae350ec",
 					"text": "Выгулять кота соседа",
 					"checked": true
 				}
@@ -30,6 +30,16 @@
 				{
 					"_id": "c2f2a3d2e80f6d6cc5b2",
 					"text": "Цемнуть Вову",
+					"checked": true
+				},
+				{
+					"_id": "69d98a0c5602daf2a767",
+					"text": "Выпить кофе",
+					"checked": true
+				},
+				{
+					"_id": "55279227cdfc235c79c7",
+					"text": "Выгулять кота соседа",
 					"checked": true
 				}
 			]

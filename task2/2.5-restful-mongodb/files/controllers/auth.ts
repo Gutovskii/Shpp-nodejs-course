@@ -29,7 +29,7 @@ export const register = (req: any, res: any) => {
 export const logout = (req: any, res: any) => {
     req.session.destroy((err: any) => {
         if (!err) {
-            res.clearCookie('connect.sid').json({"ok": true})
+            res.clearCookie('connect.sid').json({ "ok": true })
         }
     })
 }

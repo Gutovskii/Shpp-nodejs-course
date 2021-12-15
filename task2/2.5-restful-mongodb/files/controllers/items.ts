@@ -1,4 +1,4 @@
-import { addItemService, changeItemService, deleteItemService, getItemsService } from '../services/items'
+import { addItemService, editItemService, deleteItemService, getItemsService } from '../services/items'
 import { ITask } from '../interfaces/db'
 
 const dbUrn: string = './db/db.json'
@@ -19,10 +19,10 @@ export const addItem = (req: any, res: any) => {
     res.status(200).json({ _id: newTask._id })
 }
 
-export const changeItem = (req: any, res: any) => {
+export const editItem = (req: any, res: any) => {
     if (!req.session.userId && !req.body.hasOwnProperty('_id')) res.status(400).send('400 Bad Request')
 
-    const newTask: ITask | undefined = changeItemService(req.session.userId, req.body)
+    const newTask: ITask | undefined = editItemService(req.session.userId, req.body)
 
     if (!newTask) {
         return res.status(404).json({ "ok": false })

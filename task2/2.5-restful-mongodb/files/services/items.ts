@@ -27,7 +27,7 @@ export const addItemService = (userId: string, text: string): ITask => {
     return newTask
 }
 
-export const changeItemService = (userId: string, newTask: ITask): ITask | undefined => {
+export const editItemService = (userId: string, newTask: ITask): ITask | undefined => {
     const database: IDb = JSON.parse(fs.readFileSync(dbUrn, 'utf-8'))
     const userIndex: number = database.users.findIndex((userData: IUser) => userData._id === userId)
     const taskToChangeIndex: number = database.users[userIndex].tasks.findIndex((task: ITask) => task._id === newTask._id)
