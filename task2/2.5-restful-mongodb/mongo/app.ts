@@ -4,8 +4,9 @@ import MongoStore from 'connect-mongo'
 import cors from 'cors'
 import 'dotenv/config'
 
-import items from './router/items'
-import auth from './router/auth'
+import { getItems } from './controllers/items'
+import { itemsRouter } from './router/items'
+import { authRouter } from './router/auth'
 import connectDB from './db/connect'
 
 const app = express()
@@ -20,7 +21,10 @@ app.use(session({
 app.use(cors())
 app.use(express.json())
 app.use(express.static('public'))
-app.use('/api/v1', items, auth)
+
+app.get('/api/v2/router', getItems)
+app.post('/api/v2/router', itemsRouter)
+app.post('/api/v2/router', authRouter)
 
 const port = 3000
 
