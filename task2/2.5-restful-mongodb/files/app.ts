@@ -1,6 +1,7 @@
 import express from 'express'
 import session from 'express-session'
 import sessionFileStore from 'session-file-store'
+import cors from 'cors'
 
 import items from './router/items'
 import auth from './router/auth'
@@ -16,6 +17,7 @@ app.use(session({
     saveUninitialized: false
 }))
 
+app.use(cors())
 app.use(express.json())
 app.use(express.static('public'))
 app.use('/api/v1', items, auth)
