@@ -1,6 +1,7 @@
 import express from 'express'
 import session from 'express-session'
 import sessionFileStore from 'session-file-store'
+import cors from 'cors'
 
 import { getItems } from './controllers/items'
 import itemsRouter from './router/items'
@@ -17,6 +18,7 @@ app.use(session({
     saveUninitialized: false
 }))
 
+app.use(cors())
 app.use(express.json())
 app.use(express.static('public'))
 
