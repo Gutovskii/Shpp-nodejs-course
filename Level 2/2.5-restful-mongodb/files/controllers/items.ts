@@ -8,7 +8,7 @@ export const getItems = async (req: any, res: any) => {
 
     const userTasks: ITask[] | undefined = getItemsService(req.session.userId)
     
-    res.status(200).json(userTasks) // get
+    res.status(200).json({ items: userTasks }) // get
 }
 
 export const addItem = (req: any, res: any) => {

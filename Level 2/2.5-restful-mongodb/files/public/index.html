@@ -347,7 +347,7 @@ README:
                             if (response.error === 'forbidden') {
                                 this.step = 'login';
                             } else {
-                                this.tasks = response.map((item) => {
+                                this.tasks = response.items.map((item) => {
                                     item.editable = false;
                                     return item;
                                 })
