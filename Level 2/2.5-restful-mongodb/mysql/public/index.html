@@ -340,7 +340,9 @@ README:
                 getTasks: function () {
                     const route = this.apiVersion === 'v1' ? '/items' : '/router';
                     const qs = {action: this.apiVersion === 'v1' ? '' : 'getItems'};
-                    fetch(this.apiURL + this.apiVersion + route + this.backendSuffix + '?' + new URLSearchParams(qs))
+                    fetch(this.apiURL + this.apiVersion + route + this.backendSuffix + '?' + new URLSearchParams(qs), {
+                        credentials: 'include'
+                    })
                         .then(res => res.json())
                         .then((response) => {
                             if (response.error === 'forbidden') {

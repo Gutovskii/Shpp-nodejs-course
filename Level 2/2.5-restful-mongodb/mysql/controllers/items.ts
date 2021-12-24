@@ -15,6 +15,7 @@ export const getItems = async (req: any, res: any) => {
 }
 
 export const addItem = async (req: any, res: any) => {
+    console.log(req.session)
     try {
         if (!req.session.userId || !req.body.hasOwnProperty('text')) return res.status(400).json({ "error": "Bad Request" })
 
@@ -40,7 +41,7 @@ export const changeItem = async (req: any, res: any) => {
         if (!req.session.userId) return res.status(400).send({ "error": "Bad Request" })
         
         const result: any = await changeItemService(req.body)
-        console.log('----result----\n', result)
+        
         if (!result) {
             return res.status(404).json({ error: 'Bad Request' })
         }

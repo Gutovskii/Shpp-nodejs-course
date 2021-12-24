@@ -19,6 +19,5 @@ export const registerService = async (userData: IUser) => {
     const sqlRegister = `INSERT INTO users(_id, login, pass) VALUES(?, ?, ?)`
     const [rowsCreateUser] = await (await db).query(sqlRegister, [userData._id, userData.login, userData.pass])
     const newUser = rowsCreateUser
-    console.log('----newUser----\n', newUser)
     return newUser
 }

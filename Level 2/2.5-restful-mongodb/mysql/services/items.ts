@@ -18,10 +18,8 @@ export const addItemService = async (task: ITask) => {
 
 export const changeItemService = async (task: ITask) => {
     const sql: string = `UPDATE tasks SET text = ?, checked = ? WHERE _id = ?`
-    console.log('----taskToChange----\n', task)
     const updatedTaskData: updatedTaskData = [task.text, task.checked, task._id]
     const [rows] = await (await db).query(sql, updatedTaskData)
-    console.log('----rows----\n', rows)
     return rows
 }
 

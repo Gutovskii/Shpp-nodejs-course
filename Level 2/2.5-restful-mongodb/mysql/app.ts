@@ -19,12 +19,11 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         maxAge: 100 * 60 * 60 * 2,
-        httpOnly: true,
     }
 }))
 
 app.use(cors({
-    origin: 'http://localhost:8080',
+    origin: ['http://localhost:3000', 'http://localhost:8080'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }))
