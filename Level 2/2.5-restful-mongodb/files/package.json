@@ -4,8 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "serve": "tsc && nodemon dist/app.js",
-    "build": "tsc && nodemon app.ts"
+    "build": "tsc && nodemon dist/app.js",
+    "serve": "tsc && nodemon app.ts"
   },
   "keywords": [],
   "author": "",
