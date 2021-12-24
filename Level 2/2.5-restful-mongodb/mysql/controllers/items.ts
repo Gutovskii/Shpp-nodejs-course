@@ -40,7 +40,7 @@ export const changeItem = async (req: any, res: any) => {
         if (!req.session.userId) return res.status(400).send({ "error": "Bad Request" })
         
         const result: any = await changeItemService(req.body)
-        console.log('----result----\n', result)
+        
         if (!result) {
             return res.status(404).json({ error: 'Bad Request' })
         }
