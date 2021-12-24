@@ -14,10 +14,19 @@ app.use(session({
     secret: 'omegasuperpowerfulsecret',
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 100 * 60 * 60 * 2,
+        httpOnly: true
+    }
 }))
 
-app.use(cors())
+app.use(cors({
+    origin: ['http://localhost:3000', 'http://localhost:8080'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+}))
+
 app.use(express.json())
 app.use(express.static('public'))
 app.use('/api/v1', items, auth)
