@@ -117,6 +117,7 @@ README:
             width: 772px;
             margin: 35px auto;
         }
+
         .task{
             display: flex;
             flex-direction: row;
@@ -226,26 +227,6 @@ README:
         <h1 class="logo">Ш<span style="color: #27ae60">++</span></h1>  
     </header>
     <main>
-        <div class="settings">
-            <h3>Настройки приложения:</h2>
-            <label>
-                Api URL:
-                <input type="text" v-model="apiURL">
-            </label>
-            <div>
-                На каком языке бекенд?
-                <button @click="backendLanguage='PHP'" :class="{'selected': backendLanguage === 'PHP'}">PHP</button>
-                <button @click="backendLanguage='JS'"  :class="{'selected': backendLanguage === 'JS'}">JS</button>
-            </div>
-            <div>
-                Версия АПИ
-                <button @click="apiVersion='v1'" :class="{'selected': apiVersion === 'v1'}">v1</button>
-                <button @click="apiVersion='v2'" :class="{'selected': apiVersion === 'v2'}">v2</button>
-            </div>
-            <div>
-                <button @click="getTasks()" class="primary">Поехали</button>
-            </div>
-        </div>
         <div class="wrapper login" v-if="step === 'login'">
             <h3>Доступ к учетной записи</h1>
             <div class="LoginInput">
@@ -281,7 +262,6 @@ README:
         <div class="wrapper" v-else-if="step === 'error'">
             Произошла ошибка. Откройте консоль разработчика чтоб увидеть подробности.
         </div>
-        
     </main>
 </div>
 <script>
@@ -337,11 +317,16 @@ README:
                     return this.backendLanguage === 'PHP' ? '.php' : '';
                 },
             },
+            mounted() {
+                this.getTasks()
+            },
             methods: {
                 getTasks: function () {
                     const route = this.apiVersion === 'v1' ? '/items' : '/router';
                     const qs = {action: this.apiVersion === 'v1' ? '' : 'getItems'};
-                    fetch(this.apiURL + this.apiVersion + route + this.backendSuffix + '?' + new URLSearchParams(qs))
+                    fetch(this.apiURL + this.apiVersion + route + this.backendSuffix + '?' + new URLSearchParams(qs), {
+                        credentials: 'include'
+                    })
                         .then(res => res.json())
                         .then((response) => {
                             if (response.error === 'forbidden') {
@@ -354,6 +339,7 @@ README:
                                 this.step = 'items';
                             }
                         }).catch((error) => {
+                            console.log(error)
                             this.step = 'error';
                         })
                 },
@@ -381,7 +367,7 @@ README:
                     if (this.new_task.text.trim() !== '') {
                         let request = JSON.stringify({ text: this.new_task.text });
                         const route = this.apiVersion === 'v1' ? '/items' : '/router';
-                        const qs = {action: this.apiVersion === 'v1' ? '' : 'createItem'};
+                        const qs = {action: this.apiVersion === 'v1' ? '' : 'addItem'};
                         fetch(this.apiURL + this.apiVersion + route + this.backendSuffix + '?' + new URLSearchParams(qs), {
                             method: this.apiVersion === 'v1' ? 'POST' : 'POST',
                             body: request,
@@ -391,6 +377,7 @@ README:
                             },
                         }).then(res => res.json())
                             .then((response) => {
+                                console.log(response)
                                 if (response._id) {
                                     this.getTasks();
                                     this.$set(this.new_task, 'text', '');
@@ -403,7 +390,7 @@ README:
                 updateTask: function (index, id) {
                     let request = JSON.stringify({ _id: id, text: this.tasks[index].text, checked: this.tasks[index].checked });
                     const route = this.apiVersion === 'v1' ? '/items' : '/router';
-                    const qs = {action: this.apiVersion === 'v1' ? '' : 'editItem'};
+                    const qs = {action: this.apiVersion === 'v1' ? '' : 'changeItem'};
                     fetch(this.apiURL + this.apiVersion + route + this.backendSuffix + '?' + new URLSearchParams(qs), {
                         method: this.apiVersion === 'v1' ? 'PUT' : 'POST',
                         body: request,
@@ -418,7 +405,7 @@ README:
                         });
                 },
                 markAsDone(index, id) {
-                    this.$set(this.tasks[index], 'checked', this.tasks[index].checked === false)
+                    this.$set(this.tasks[index], 'checked', this.tasks[index].checked == false)
                     this.checked = this.tasks[index].checked;
                     this.updateTask(index, id)
                 },
