@@ -117,6 +117,7 @@ README:
             width: 772px;
             margin: 35px auto;
         }
+
         .task{
             display: flex;
             flex-direction: row;
@@ -226,26 +227,6 @@ README:
         <h1 class="logo">Ш<span style="color: #27ae60">++</span></h1>  
     </header>
     <main>
-        <div class="settings">
-            <h3>Настройки приложения:</h2>
-            <label>
-                Api URL:
-                <input type="text" v-model="apiURL">
-            </label>
-            <div>
-                На каком языке бекенд?
-                <button @click="backendLanguage='PHP'" :class="{'selected': backendLanguage === 'PHP'}">PHP</button>
-                <button @click="backendLanguage='JS'"  :class="{'selected': backendLanguage === 'JS'}">JS</button>
-            </div>
-            <div>
-                Версия АПИ
-                <button @click="apiVersion='v1'" :class="{'selected': apiVersion === 'v1'}">v1</button>
-                <button @click="apiVersion='v2'" :class="{'selected': apiVersion === 'v2'}">v2</button>
-            </div>
-            <div>
-                <button @click="getTasks()" class="primary">Поехали</button>
-            </div>
-        </div>
         <div class="wrapper login" v-if="step === 'login'">
             <h3>Доступ к учетной записи</h1>
             <div class="LoginInput">
@@ -281,14 +262,13 @@ README:
         <div class="wrapper" v-else-if="step === 'error'">
             Произошла ошибка. Откройте консоль разработчика чтоб увидеть подробности.
         </div>
-        
     </main>
 </div>
 <script>
     Vue.component("task", {
             props: ["data", "index"],
             template: `
-    <div class="task" v-bind:class="{ taskCompleted: data.checked }" >
+    <div class="task" v-bind:class="{ taskCompleted: data.checked}" >
         <div class="contentText">
             <div>
                 <button @click="$emit('task_done')" class="task_done taskButton">
@@ -323,18 +303,22 @@ README:
                     editable: false,
                     checked: false
                 },
-                tasks: [],
+                tasks: [
+                ],
                 login: '',
                 pass: '',
                 backendLanguage: 'JS',
                 apiURL: 'http://localhost:3000/api/',
-                apiVersion: 'v1',
+                apiVersion: 'v2',
                 step: ''
             },
             computed: {
                 backendSuffix() {
                     return this.backendLanguage === 'PHP' ? '.php' : '';
                 },
+            },
+            mounted() {
+                this.getTasks()
             },
             methods: {
                 getTasks: function () {
@@ -355,6 +339,7 @@ README:
                                 this.step = 'items';
                             }
                         }).catch((error) => {
+                            console.log(error)
                             this.step = 'error';
                         })
                 },
@@ -392,6 +377,7 @@ README:
                             },
                         }).then(res => res.json())
                             .then((response) => {
+                                console.log(response)
                                 if (response._id) {
                                     this.getTasks();
                                     this.$set(this.new_task, 'text', '');
