@@ -6,7 +6,7 @@ const dbUrn: string = './db/db.json'
 
 export const getItemsService = (userId: string): ITask[] | undefined => {
     const database: IDb = JSON.parse(fs.readFileSync(dbUrn, 'utf-8'))
-    const userTasks: ITask[] | undefined = database.users.find((userData: IUser) => userData._id === userId)?.tasks
+    const userTasks: ITask[] | undefined = database.users.find((userData: IUser) => userData._id === userId)?.tasks // get
 
     return userTasks
 }
@@ -20,7 +20,7 @@ export const addItemService = (userId: string, text: string): ITask => {
         text,
         checked: false
     }
-    database.users[userIndex].tasks.push(newTask)
+    database.users[userIndex].tasks.push(newTask) // post
     const newData: string = JSON.stringify(database, undefined, '\t')
     fs.writeFileSync(dbUrn, newData)
 

@@ -1,9 +1,11 @@
+import { Request, Response, NextFunction } from 'express'
+
 import {
     addItem,
     editItem,
     deleteItem } from '../controllers/items'
 
-export const itemsRouter = (req: any, res: any, next: any) => {
+export const itemsRouter = (req: Request, res: Response, next: NextFunction) => {
     switch (req.query.action) {
         case 'addItem':
             return addItem(req, res)
