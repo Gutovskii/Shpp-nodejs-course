@@ -1,4 +1,5 @@
 import express from 'express'
+import { Express } from 'express'
 import session from 'express-session'
 import MongoStore from 'connect-mongo'
 import cors from 'cors'
@@ -9,7 +10,13 @@ import { itemsRouter } from './router/items'
 import { authRouter } from './router/auth'
 import connectDB from './db/connect'
 
-const app = express()
+const app: Express = express()
+
+declare module 'express-session' {
+ interface Session {
+    userId: string;
+  }
+}
 
 app.use(session({
     secret: 'omegasuperpowerfulsecret',
@@ -34,7 +41,7 @@ app.get('/api/v2/router', getItems)
 app.post('/api/v2/router', itemsRouter)
 app.post('/api/v2/router', authRouter)
 
-const port = 3000
+const port: number = 3000
 
 const start = async () => {
     try {
@@ -44,5 +51,4 @@ const start = async () => {
         console.log(err)
     }
 }
-
 start()

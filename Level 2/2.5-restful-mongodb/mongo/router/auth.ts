@@ -1,10 +1,12 @@
+import { Request, Response, NextFunction } from 'express'
+
 import {
     login,
     register,
     logout
 } from '../controllers/auth'
 
-export const authRouter = (req: any, res: any, next: any) => {
+export const authRouter = (req: Request, res: Response, next: NextFunction) => {
     switch (req.query.action) {
         case 'login':
             return login(req, res)
