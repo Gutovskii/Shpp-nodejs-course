@@ -33,7 +33,7 @@ export const changeItemService = (userId: string, newTask: ITask): ITask | undef
     const taskToChangeIndex: number = database.users[userIndex].tasks.findIndex((task: ITask) => task._id === newTask._id)
     if (taskToChangeIndex === -1) {
         return undefined
-    }  
+    }
     database.users[userIndex].tasks[taskToChangeIndex] = newTask // put
     const newData: string = JSON.stringify(database, undefined, '\t')
     fs.writeFileSync(dbUrn, newData)
