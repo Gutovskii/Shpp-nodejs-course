@@ -1,16 +1,22 @@
-import express from 'express'
+import express, { Express } from 'express'
 import session from 'express-session'
 import cors from 'cors'
 import 'dotenv/config'
-
-const MySQLStore = require('express-mysql-session')(session)
 
 import db from './db/connect'
 import itemsRouter from './router/items'
 import authRouter from './router/auth'
 import { getItems } from './controllers/items'
 
-const app = express()
+const app: Express = express()
+
+const MySQLStore = require('express-mysql-session')(session)
+
+declare module 'express-session' {
+    interface Session {
+        userId: string;
+    }
+}
 
 app.use(session({
     secret: 'omegasuperpowerfulsecret',
@@ -35,7 +41,7 @@ app.get('/api/v2/router', getItems)
 app.post('/api/v2/router', itemsRouter)
 app.post('/api/v2/router', authRouter)
 
-const port = 3000
+const port: number = 3000
 
 const start = async () => {
     try {
@@ -45,5 +51,4 @@ const start = async () => {
         console.log(err)
     }
 }
-
 start()
