@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose'
 
 interface ITask {
+    _id: string
     forUser: string
     text: string,
     checked: boolean

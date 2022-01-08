@@ -1,6 +1,7 @@
+import { Request, Response } from 'express'
 import { Task } from '../models/Task'
 
-export const getItems = async (req: any, res: any) => {
+export const getItems = async (req: Request, res: Response) => {
     if (!req.session.userId) return res.status(500).json({ "error": "forbidden" })
 
     try {
@@ -11,7 +12,7 @@ export const getItems = async (req: any, res: any) => {
     }
 }
 
-export const addItem = async (req: any, res: any) => {
+export const addItem = async (req: Request, res: Response) => {
     try {
         if (!req.session.userId && !req.body.hasOwnProperty('text')) return res.status(400).json({ "error": "Bad Request" })
 
@@ -23,7 +24,7 @@ export const addItem = async (req: any, res: any) => {
     }
 }
 
-export const changeItem = async (req: any, res: any) => {
+export const changeItem = async (req: Request, res: Response) => {
     try {
         if (!req.session.userId) return res.status(400).send({ "error": "Bad Request" })
         
@@ -34,12 +35,12 @@ export const changeItem = async (req: any, res: any) => {
             return res.status(404).json({ error: 'Bad Request' })
         }
         res.status(201).json({ ok: true })
-    } catch (err: any) {
-        res.status(500).json({ error: err.message })
+    } catch (err) {
+        res.status(500).json({ error: err })
     }
 }
 
-export const deleteItem = async (req: any, res: any) => {
+export const deleteItem = async (req: Request, res: Response) => {
     try {
         if (!req.session.userId && !req.body.hasOwnProperty('_id')) return res.status(400).json({ "error": "Bad Request"})
 
