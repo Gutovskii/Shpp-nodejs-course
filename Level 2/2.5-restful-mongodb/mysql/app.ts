@@ -1,15 +1,21 @@
-import express from 'express'
+import express, { Express } from 'express'
 import session from 'express-session'
 import cors from 'cors'
 import 'dotenv/config'
-
-const MySQLStore = require('express-mysql-session')(session)
 
 import items from './router/items'
 import auth from './router/auth'
 import db from './db/connect'
 
-const app = express()
+const app: Express = express()
+
+const MySQLStore = require('express-mysql-session')(session)
+
+declare module 'express-session' {
+    interface Session {
+         userId: string;
+    }
+}
 
 app.use(session({
     secret: 'omegasuperpowerfulsecret',

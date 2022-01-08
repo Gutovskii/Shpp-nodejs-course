@@ -1,33 +1,39 @@
+import { Request, Response } from "express"
+import { RowDataPacket } from "mysql2"
 import { loginService, registerService } from "../services/auth"
 
-export const login = async (req: any, res: any) => {
-    const { login, pass } = req.body
-
-    if (!(login && pass)) return res.status(404).json({ "ok": false })
-
-    const user: any = await loginService({ login, pass })
+export const login = async (req: Request, res: Response) => {
+    try {
+        const { login, pass } = req.body
+        if (!(login && pass)) return res.status(404).json({ "ok": false })
     
-    if (!user) return res.status(404).json({ "error": "not found" })
-
-    req.session.userId = user[0]._id
+        const user: RowDataPacket[] | undefined = await loginService({ login, pass })
+        if (!user) return res.status(404).json({ "error": "not found" })
     
-    res.status(200).json({ "ok": true })
+        req.session.userId = user[0]._id
+        
+        return res.status(200).json({ "ok": true })
+    } catch (error) {
+        return res.status(500).json({ "error": "Internal Server Error" })
+    }
 }
 
-export const register = async (req: any, res: any) => {
-    const { login, pass } = req.body
+export const register = async (req: Request, res: Response) => {
+    try {
+        const { login, pass } = req.body
+        if (!(login && pass)) return res.status(404).json({ "ok": false })
     
-    if (!(login && pass)) return res.status(404).json({ "ok": false })
-
-    const user: any = await registerService({ login, pass })
+        const user: RowDataPacket[] | undefined = await registerService({ login, pass })
+        if (!user) return res.status(404).json({ "error": "already exist" })
     
-    if (!user) return res.status(404).json({ "error": "already exist" })
-
-    res.status(200).json({ "ok": true })
+        return res.status(200).json({ "ok": true })
+    } catch (error) {
+        return res.status(500).json({ "error": "Internal Server Error" })
+    }
 }
 
-export const logout = (req: any, res: any) => {
-    req.session.destroy((err: any) => {
+export const logout = (req: Request, res: Response) => {
+    req.session.destroy((err: unknown) => {
         if (!err) {
             res.clearCookie('connect.sid').json({ "ok": true })
         }
