@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteBook = exports.addBook = exports.getBook = void 0;
+var express_validator_1 = require("express-validator");
 var book_1 = require("../services/book");
 var getBook = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var bookData, error_1;
@@ -59,10 +60,16 @@ var getBook = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
 }); };
 exports.getBook = getBook;
 var addBook = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var upload;
+    var errors, upload, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, book_1.addBookImageService)()];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                errors = (0, express_validator_1.validationResult)(req);
+                if (!errors.isEmpty()) {
+                    return [2 /*return*/, res.json({ error: '404 Bad Request' })];
+                }
+                return [4 /*yield*/, (0, book_1.addBookImageService)()];
             case 1:
                 upload = _a.sent();
                 upload.single('bookImage')(req, res, function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -75,13 +82,17 @@ var addBook = function (req, res, next) { return __awaiter(void 0, void 0, void 
                         }
                     });
                 }); });
-                return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 2:
+                error_2 = _a.sent();
+                return [2 /*return*/, res.json({ error: error_2 })];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 exports.addBook = addBook;
 var deleteBook = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, error_2;
+    var id, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -92,8 +103,8 @@ var deleteBook = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 _a.sent();
                 return [2 /*return*/, res.redirect('back')];
             case 2:
-                error_2 = _a.sent();
-                return [2 /*return*/, res.json({ error: error_2 })];
+                error_3 = _a.sent();
+                return [2 /*return*/, res.json({ error: error_3 })];
             case 3: return [2 /*return*/];
         }
     });

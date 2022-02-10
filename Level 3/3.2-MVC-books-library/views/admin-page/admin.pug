@@ -116,25 +116,26 @@ html(lang='en')
 							.col-6
 								.mb-3
 									label.form-label(for='Title') Название
-									input#Title.form-control(type='text' placeholder='Multithreaded JavaScript' name='title')
+									input#Title.form-control(type='text' placeholder='Multithreaded JavaScript' name='title' required)
 								.mb-3
 									label.form-label(for='Year') Год издания
-									input#Year.form-control(type='number' name='year')
+									input#Year.form-control(type='number' name='year' required)
 								.mb-3
 									label.form-label(for='Pages') Количество страниц
-									input#Pages.form-control(type='number' name='pages')
+									input#Pages.form-control(type='number' name='pages' required)
 								.mb-3.input-group.custom-file-button
 									label.input-group-text(for='Image') Загрузить картинку
-									input#Image.form-control(type='file' name='bookImage' accept='.png, .jpg, .jpeg')
+									input#Image.form-control(type='file' name='bookImage' accept='.png, .jpg, .jpeg' required)
+									img.bookImage
 								.mb-3
 									input.btn.btn-success(type='submit' value='Добавить')
 							.col-6
 								.mb-3
 									label.form-label(for='Author') Автор
-									input#Author.form-control(type='text' name='authorName')
+									input#Author.form-control(type='text' name='authorName' required)
 								.mb-3
 									label.form-label(for='Description') Описание
-									textarea#Description.form-control(rows='3' name='description')
+									textarea#Description.form-control(rows='3' name='description' required)
 		script(src='./admin-page_files/admin.js')
 		
 			

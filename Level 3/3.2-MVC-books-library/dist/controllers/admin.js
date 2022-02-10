@@ -69,6 +69,11 @@ var getAdminPage = function (req, res) { return __awaiter(void 0, void 0, void 0
 }); };
 exports.getAdminPage = getAdminPage;
 var adminLogout = function (req, res) {
-    return res.status(401).end();
+    try {
+        return res.status(401).end();
+    }
+    catch (error) {
+        return res.json({ error: error });
+    }
 };
 exports.adminLogout = adminLogout;

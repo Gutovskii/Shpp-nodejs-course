@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `books` (
   `wishful` int(10) NOT NULL DEFAULT 0,
   `deleted` tinyint(4) NOT NULL DEFAULT 0,
   PRIMARY KEY (`book_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 21 DEFAULT CHARSET = utf8mb4;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 DEFAULT CHARSET = utf8mb4;
 
 # ------------------------------------------------------------
 # SCHEMA DUMP FOR TABLE: books_authors_id
@@ -392,8 +392,8 @@ VALUES
     2000,
     500,
     'Книга про компьютерный кодинг для детей',
-    0,
-    0,
+    1,
+    1,
     0
   );
 
@@ -413,10 +413,6 @@ INSERT INTO
   `books_authors_id` (`book_id`, `author_id`)
 VALUES
   (3, 4);
-INSERT INTO
-  `books_authors_id` (`book_id`, `author_id`)
-VALUES
-  (3, 5);
 INSERT INTO
   `books_authors_id` (`book_id`, `author_id`)
 VALUES

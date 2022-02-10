@@ -25,5 +25,9 @@ export const getAdminPage = async (req: Request, res: Response) => {
 }
 
 export const adminLogout = (req: Request, res: Response) => {
-    return res.status(401).end();
+    try {
+        return res.status(401).end();
+    } catch (error) {
+        return res.json({ error });
+    }
 }
