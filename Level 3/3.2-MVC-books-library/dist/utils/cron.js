@@ -40,6 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.runCron = void 0;
+var fs_1 = __importDefault(require("fs"));
 var node_cron_1 = __importDefault(require("node-cron"));
 var mysqldump_1 = __importDefault(require("mysqldump"));
 var connection_1 = require("../database/connection");
@@ -57,7 +58,7 @@ var runCron = function () {
                 case 2:
                     _a.sent();
                     for (i = 0; i < idBooksToDelete.length; i++) {
-                        // fs.unlinkSync(`views/books-page/books-page_files/${idBooksToDelete[i].id}.jpg`);
+                        fs_1.default.unlinkSync("views/books-page/books-page_files/".concat(idBooksToDelete[i].id, ".jpg"));
                     }
                     console.log('Books have been deleted');
                     return [2 /*return*/];

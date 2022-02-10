@@ -1,17 +1,22 @@
 import { RowDataPacket } from "mysql2";
 import { db } from "../database/connection";
-import { AuthorData, NewBookAndAuthorData, NewBookData } from '../interfaces/interfaces';
+import { AuthorData, BookData, NewBookAndAuthorData, NewBookData } from '../interfaces/interfaces';
 import { setMulterForBookImage } from "../utils/setMulter";
 
-export const getBookService = async (id: string) => {
-    const sql: string = `
+export const getBookService = async (id: string): Promise<BookData> => {
+    const sqlGetBookData: string = `
         SELECT books_authors_id.book_id, books.title, books.year_of_publication, books.pages, books.description, authors.author_name FROM books
         JOIN books_authors_id ON books_authors_id.book_id = books.book_id
         JOIN authors ON books_authors_id.author_id = authors.author_id
         WHERE books.book_id = ?`;
     
-    const [bookData] = await db.query<RowDataPacket[]>(sql, [id]);
-    return bookData[0];
+    const [bookData] = await db.query<RowDataPacket[]>(sqlGetBookData, [id]);
+    if (bookData[0]?.book_id) {
+        return bookData[0];
+    }
+    else {
+        return { errorNotFound: '404 Not Found' };
+    }
 }
 
 export const addBookService = async (newBookAndAuthorData: NewBookAndAuthorData) => {

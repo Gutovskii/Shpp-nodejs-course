@@ -1,15 +1,19 @@
 import { NextFunction, Request, Response } from "express";
 import { body, validationResult } from "express-validator";
-import { RowDataPacket } from "mysql2";
 import { NewBookAndAuthorData } from "../interfaces/interfaces";
 import { addBookImageService, addBookService, deleteBookService, getBookService } from "../services/book";
 
 export const getBook = async (req: Request, res: Response) => {
     try {
-        const bookData: RowDataPacket = await getBookService(req.params.id);
-        return res.render('book-page/book', {
-            bookData
-        });
+        const bookData = await getBookService(req.params.id);
+        if (bookData.errorNotFound) {
+            return res.status(404).json(bookData.errorNotFound);
+        }
+        else {
+            return res.render('book-page/book', {
+                bookData
+            });
+        }
     } catch (error) {
         return res.json({ error });
     }
@@ -44,7 +48,7 @@ export const deleteBook = async (req: Request, res: Response) => {
     try {
         const id = req.params.id;
         await deleteBookService(id);
-        return res.redirect('back');
+        return res.json({ done: true });
     } catch (error) {
         return res.json({ error });
     }

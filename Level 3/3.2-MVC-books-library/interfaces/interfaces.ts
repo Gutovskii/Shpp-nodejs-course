@@ -1,4 +1,3 @@
-import multer from "multer";
 import { RowDataPacket } from "mysql2";
 
 export interface SearchParams {
@@ -27,3 +26,9 @@ export interface NewBookData {
 export interface AuthorData {
     authorName: string
 }
+
+export interface NewError {
+    errorNotFound: string
+}
+
+export type BookData = Promise<RowDataPacket> | NewError;

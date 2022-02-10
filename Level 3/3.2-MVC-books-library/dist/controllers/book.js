@@ -60,22 +60,31 @@ var getBook = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
 }); };
 exports.getBook = getBook;
 var addBook = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var errors, upload, error_2;
+    var upload, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                errors = (0, express_validator_1.validationResult)(req);
-                if (!errors.isEmpty()) {
-                    return [2 /*return*/, res.json({ error: '404 Bad Request' })];
-                }
                 return [4 /*yield*/, (0, book_1.addBookImageService)()];
             case 1:
                 upload = _a.sent();
                 upload.single('bookImage')(req, res, function () { return __awaiter(void 0, void 0, void 0, function () {
+                    var errors;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, (0, book_1.addBookService)(req.body)];
+                            case 0:
+                                // express-validator check
+                                (0, express_validator_1.body)('title').notEmpty(),
+                                    (0, express_validator_1.body)('year').notEmpty(),
+                                    (0, express_validator_1.body)('pages').notEmpty(),
+                                    (0, express_validator_1.body)('authorName').notEmpty(),
+                                    (0, express_validator_1.body)('description').notEmpty();
+                                errors = (0, express_validator_1.validationResult)(req);
+                                if (!errors.isEmpty()) {
+                                    console.log(errors.array());
+                                    return [2 /*return*/, res.json({ error: '404 Bad Request' })];
+                                }
+                                return [4 /*yield*/, (0, book_1.addBookService)(req.body)];
                             case 1:
                                 _a.sent();
                                 return [2 /*return*/, res.redirect('back')];
@@ -101,7 +110,7 @@ var deleteBook = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 return [4 /*yield*/, (0, book_1.deleteBookService)(id)];
             case 1:
                 _a.sent();
-                return [2 /*return*/, res.redirect('back')];
+                return [2 /*return*/, res.json({ done: true })];
             case 2:
                 error_3 = _a.sent();
                 return [2 /*return*/, res.json({ error: error_3 })];

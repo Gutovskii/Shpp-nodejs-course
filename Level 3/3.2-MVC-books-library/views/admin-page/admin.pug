@@ -9,7 +9,7 @@ mixin book(bookData)
 		td= bookData.clicked
 		td= bookData.wishful
 		td(align='right')
-			a.btn.btn-danger(href='http://localhost:3000/admin/api/v1/delete/' + bookData.book_id) Удалить
+			a.btn.btn-danger(data-book-id=bookData.book_id) Удалить
 
 doctype html
 html(lang='en')
@@ -53,6 +53,9 @@ html(lang='en')
 			}
 			.logout {
 				cursor: pointer;
+			}
+			.swal2-cancel {
+				margin-right: 10px;
 			}
 	body
 		.container-fluid
