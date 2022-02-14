@@ -3,7 +3,7 @@
 mixin book(bookData)
 	tr
 		th(scope='row')= bookData.title
-		td= bookData.author_name
+		td= bookData.authorsNames
 		td= bookData.year_of_publication
 		td= bookData.pages
 		td= bookData.clicked
@@ -119,26 +119,32 @@ html(lang='en')
 							.col-6
 								.mb-3
 									label.form-label(for='Title') Название
-									input#Title.form-control(type='text' placeholder='Multithreaded JavaScript' name='title' required)
+									input#Title.form-control(type='text' placeholder='Multithreaded JavaScript' name='title' )
 								.mb-3
 									label.form-label(for='Year') Год издания
-									input#Year.form-control(type='number' name='year' required)
+									input#Year.form-control(type='number' name='year' )
 								.mb-3
 									label.form-label(for='Pages') Количество страниц
-									input#Pages.form-control(type='number' name='pages' required)
+									input#Pages.form-control(type='number' name='pages' )
 								.mb-3.input-group.custom-file-button
 									label.input-group-text(for='Image') Загрузить картинку
-									input#Image.form-control(type='file' name='bookImage' accept='.png, .jpg, .jpeg' required)
+									input#Image.form-control(type='file' name='bookImage' accept='.png, .jpg, .jpeg' )
 									img.bookImage
 								.mb-3
 									input.btn.btn-success(type='submit' value='Добавить')
 							.col-6
 								.mb-3
-									label.form-label(for='Author') Автор
-									input#Author.form-control(type='text' name='authorName' required)
+									label.form-label(for='Author') Автор 1
+									input#Author.form-control(type='text' name='authorsNames[]' )
+								.mb-3
+									label.form-label(for='Author') Автор 2
+									input#Author.form-control(type='text' name='authorsNames[]' )
+								.mb-3
+									label.form-label(for='Author') Автор 3
+									input#Author.form-control(type='text' name='authorsNames[]' )
 								.mb-3
 									label.form-label(for='Description') Описание
-									textarea#Description.form-control(rows='3' name='description' required)
+									textarea#Description.form-control(rows='3' name='description' )
 		script(src='./admin-page_files/admin.js')
 		
 			

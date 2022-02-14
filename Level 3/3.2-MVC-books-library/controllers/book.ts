@@ -24,18 +24,17 @@ export const addBook = async (req: Request, res: Response, next: NextFunction) =
         const upload = await addBookImageService();
         upload.single('bookImage')(req, res, async () => {
             // express-validator check
-            body('title').notEmpty(),
-            body('year').notEmpty(),
-            body('pages').notEmpty(),
-            body('authorName').notEmpty(),
-            body('description').notEmpty();
+            // body('title').notEmpty(),
+            // body('year').notEmpty(),
+            // body('pages').notEmpty(),
+            // body('authorName').notEmpty(),
+            // body('description').notEmpty();
             
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                console.log(errors.array());
-                return res.json({ error: '404 Bad Request' });
-            }
-            
+            // const errors = validationResult(req);
+            // if (!errors.isEmpty()) {
+            //     console.log(errors.array());
+            //     return res.json({ error: '404 Bad Request' });
+            // }
             await addBookService(req.body as NewBookAndAuthorData);
             return res.redirect('back');
         });

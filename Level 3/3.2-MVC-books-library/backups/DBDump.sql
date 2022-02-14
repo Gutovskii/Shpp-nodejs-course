@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `authors` (
   `author_id` int(11) NOT NULL AUTO_INCREMENT,
   `author_name` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`author_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 16 DEFAULT CHARSET = utf8mb4;
+) ENGINE = InnoDB AUTO_INCREMENT = 41 DEFAULT CHARSET = utf8mb4;
 
 # ------------------------------------------------------------
 # SCHEMA DUMP FOR TABLE: books
@@ -105,6 +105,14 @@ INSERT INTO
   `authors` (`author_id`, `author_name`)
 VALUES
   (14, 'Тим Кедлек');
+INSERT INTO
+  `authors` (`author_id`, `author_name`)
+VALUES
+  (39, 'Abobus Bibas');
+INSERT INTO
+  `authors` (`author_id`, `author_name`)
+VALUES
+  (40, NULL);
 
 # ------------------------------------------------------------
 # DATA DUMP FOR TABLE: books
@@ -172,7 +180,7 @@ VALUES
     2010,
     69,
     'Книга про Python для анализа данных',
-    0,
+    5,
     0,
     0
   );
@@ -194,7 +202,7 @@ VALUES
     2012,
     212,
     'Книга про Философию Java, 4-ое издание',
-    0,
+    2,
     0,
     0
   );
@@ -216,7 +224,7 @@ VALUES
     2009,
     253,
     'Книга про JavaScript',
-    0,
+    1,
     0,
     0
   );
@@ -238,7 +246,7 @@ VALUES
     2013,
     352,
     'Книга про C#',
-    0,
+    2,
     0,
     0
   );
@@ -260,7 +268,7 @@ VALUES
     2012,
     158,
     'Книга про PHP и MySQL',
-    0,
+    1,
     0,
     0
   );
@@ -304,7 +312,7 @@ VALUES
     2015,
     145,
     'Книга про Интернет Вещей',
-    0,
+    1,
     0,
     0
   );
@@ -393,7 +401,7 @@ VALUES
     500,
     'Книга про компьютерный кодинг для детей',
     1,
-    1,
+    0,
     0
   );
 
@@ -413,6 +421,10 @@ INSERT INTO
   `books_authors_id` (`book_id`, `author_id`)
 VALUES
   (3, 4);
+INSERT INTO
+  `books_authors_id` (`book_id`, `author_id`)
+VALUES
+  (3, 5);
 INSERT INTO
   `books_authors_id` (`book_id`, `author_id`)
 VALUES

@@ -5,7 +5,7 @@ import { getQsParamsForBooks } from "../utils/getQsParamsForBooks";
 
 export const getAdminPage = async (req: Request, res: Response) => {
     const booksPerPage: number = 6; // data to change
-    const fields: string[] = ['books.book_id', 'books.title', 'books.year_of_publication', 'books.pages', 'books.clicked', 'books.wishful', 'authors.author_name'];
+    const fields: string[] = ['books.book_id', 'books.title', 'books.year_of_publication', 'books.pages', 'books.clicked', 'books.wishful', 'GROUP_CONCAT(CONCAT(" ", authors.author_name)) AS authorsNames'];
 
     try {
         const qsParams: SearchParams = getQsParamsForBooks(req.query as unknown as SearchParams);

@@ -38,9 +38,10 @@ export const getAllBooksPerPageService = async (searchParams: SearchParams, fiel
     }
     dataForQuery.push(Number(searchParams.offset));
 
-    const sqlGetBooksDataCount = sqlGetBooksDataPerPage.replace(/(?<=SELECT ).*/i, 'COUNT(*) AS count');
+    const sqlGetBooksDataCount = sqlGetBooksDataPerPage.replace(/(?<=SELECT ).*/i, 'COUNT(DISTINCT books.title) AS count');
     
     sqlGetBooksDataPerPage += `
+        GROUP BY books_authors_id.book_id
         LIMIT ?, ${booksPerPage}`;
 
     const [booksDataPerPage] = await db.query<RowDataPacket[]>(sqlGetBooksDataPerPage, dataForQuery);

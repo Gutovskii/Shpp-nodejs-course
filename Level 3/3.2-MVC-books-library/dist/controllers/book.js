@@ -37,7 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteBook = exports.addBook = exports.getBook = void 0;
-var express_validator_1 = require("express-validator");
 var book_1 = require("../services/book");
 var getBook = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var bookData, error_1;
@@ -48,9 +47,15 @@ var getBook = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
                 return [4 /*yield*/, (0, book_1.getBookService)(req.params.id)];
             case 1:
                 bookData = _a.sent();
-                return [2 /*return*/, res.render('book-page/book', {
-                        bookData: bookData
-                    })];
+                if (bookData.errorNotFound) {
+                    return [2 /*return*/, res.status(404).json(bookData.errorNotFound)];
+                }
+                else {
+                    return [2 /*return*/, res.render('book-page/book', {
+                            bookData: bookData
+                        })];
+                }
+                return [3 /*break*/, 3];
             case 2:
                 error_1 = _a.sent();
                 return [2 /*return*/, res.json({ error: error_1 })];
@@ -69,23 +74,33 @@ var addBook = function (req, res, next) { return __awaiter(void 0, void 0, void 
             case 1:
                 upload = _a.sent();
                 upload.single('bookImage')(req, res, function () { return __awaiter(void 0, void 0, void 0, function () {
-                    var errors;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0:
-                                // express-validator check
-                                (0, express_validator_1.body)('title').notEmpty(),
-                                    (0, express_validator_1.body)('year').notEmpty(),
-                                    (0, express_validator_1.body)('pages').notEmpty(),
-                                    (0, express_validator_1.body)('authorName').notEmpty(),
-                                    (0, express_validator_1.body)('description').notEmpty();
-                                errors = (0, express_validator_1.validationResult)(req);
-                                if (!errors.isEmpty()) {
-                                    console.log(errors.array());
-                                    return [2 /*return*/, res.json({ error: '404 Bad Request' })];
-                                }
-                                return [4 /*yield*/, (0, book_1.addBookService)(req.body)];
+                            case 0: 
+                            // express-validator check
+                            // body('title').notEmpty(),
+                            // body('year').notEmpty(),
+                            // body('pages').notEmpty(),
+                            // body('authorName').notEmpty(),
+                            // body('description').notEmpty();
+                            // const errors = validationResult(req);
+                            // if (!errors.isEmpty()) {
+                            //     console.log(errors.array());
+                            //     return res.json({ error: '404 Bad Request' });
+                            // }
+                            return [4 /*yield*/, (0, book_1.addBookService)(req.body)];
                             case 1:
+                                // express-validator check
+                                // body('title').notEmpty(),
+                                // body('year').notEmpty(),
+                                // body('pages').notEmpty(),
+                                // body('authorName').notEmpty(),
+                                // body('description').notEmpty();
+                                // const errors = validationResult(req);
+                                // if (!errors.isEmpty()) {
+                                //     console.log(errors.array());
+                                //     return res.json({ error: '404 Bad Request' });
+                                // }
                                 _a.sent();
                                 return [2 /*return*/, res.redirect('back')];
                         }

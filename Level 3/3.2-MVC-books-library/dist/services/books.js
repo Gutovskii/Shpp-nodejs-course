@@ -73,8 +73,8 @@ var getAllBooksPerPageService = function (searchParams, fields, booksPerPage) { 
                         searchParams.offset = '0';
                 }
                 dataForQuery.push(Number(searchParams.offset));
-                sqlGetBooksDataCount = sqlGetBooksDataPerPage.replace(/(?<=SELECT ).*/i, 'COUNT(*) AS count');
-                sqlGetBooksDataPerPage += "\n        LIMIT ?, ".concat(booksPerPage);
+                sqlGetBooksDataCount = sqlGetBooksDataPerPage.replace(/(?<=SELECT ).*/i, 'COUNT(DISTINCT books.title) AS count');
+                sqlGetBooksDataPerPage += "\n        GROUP BY books_authors_id.book_id\n        LIMIT ?, ".concat(booksPerPage);
                 return [4 /*yield*/, connection_1.db.query(sqlGetBooksDataPerPage, dataForQuery)];
             case 1:
                 booksDataPerPage = (_a.sent())[0];

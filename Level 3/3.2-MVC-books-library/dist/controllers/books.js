@@ -45,7 +45,7 @@ var getBooks = function (req, res) { return __awaiter(void 0, void 0, void 0, fu
         switch (_a.label) {
             case 0:
                 booksPerPage = 6;
-                fields = ['books_authors_id.book_id', 'books.title', 'authors.author_name'];
+                fields = ['books_authors_id.book_id', 'books.title', 'GROUP_CONCAT(CONCAT(" ", authors.author_name)) AS authorsNames'];
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);

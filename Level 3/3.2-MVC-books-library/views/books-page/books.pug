@@ -7,7 +7,7 @@ mixin book(bookData)
 				img(src=`./books-page_files/${bookData.book_id}.jpg` alt=bookData.title)
 				.blockI(data-title=bookData.title style='height: 46px;')
 					.title.size_text(data-book-title=bookData.title)= bookData.title 
-					.author(data-book-author=bookData.author_name)= bookData.author_name
+					.authors(data-book-authors=bookData.authorsNames)= bookData.authorsNames
 			a(href=homeUrl + 'book/' + bookData.book_id)
 				button.details.btn.btn-success(type='button') Читать
 

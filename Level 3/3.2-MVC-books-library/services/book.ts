@@ -1,11 +1,11 @@
-import { RowDataPacket } from "mysql2";
+import { OkPacket, RowDataPacket } from "mysql2";
 import { db } from "../database/connection";
-import { AuthorData, BookData, NewBookAndAuthorData, NewBookData } from '../interfaces/interfaces';
+import { AuthorData, GetBookDataResult, NewBookAndAuthorData, NewBookData } from '../interfaces/interfaces';
 import { setMulterForBookImage } from "../utils/setMulter";
 
-export const getBookService = async (id: string): Promise<BookData> => {
+export const getBookService = async (id: string): Promise<GetBookDataResult> => {
     const sqlGetBookData: string = `
-        SELECT books_authors_id.book_id, books.title, books.year_of_publication, books.pages, books.description, authors.author_name FROM books
+        SELECT books_authors_id.book_id, books.title, books.year_of_publication, books.pages, books.description, GROUP_CONCAT(CONCAT(' ', authors.author_name)) AS authorsNames FROM books
         JOIN books_authors_id ON books_authors_id.book_id = books.book_id
         JOIN authors ON books_authors_id.author_id = authors.author_id
         WHERE books.book_id = ?`;
@@ -20,7 +20,7 @@ export const getBookService = async (id: string): Promise<BookData> => {
 }
 
 export const addBookService = async (newBookAndAuthorData: NewBookAndAuthorData) => {
-    const addBookData = async (newBookData: NewBookData) => {
+    const addBookData = async (newBookData: NewBookData): Promise<number> => {
         const sqlGetLastBookId: string = `
             SELECT MAX(books.book_id) AS id
             FROM books`;
@@ -44,44 +44,61 @@ export const addBookService = async (newBookAndAuthorData: NewBookAndAuthorData)
         return lastBookId[0].id + 1;
     }
 
-    const addAuthorData = async (authorData: AuthorData) => {
-        const sqlFindExistingAuthorName: string = `
-            SELECT authors.author_id AS id, authors.author_name AS name
+    const addAuthorData = async (authorData: AuthorData): Promise<number[]> => {
+        let sqlFindExistingAuthorsNames: string = `
+            SELECT authors.author_id, authors.author_name
             FROM authors
-            WHERE authors.author_name = ?`;
+            WHERE LOWER(authors.author_name) = LOWER(?)`;
 
-        const [existingAuthorData] = await db.query<RowDataPacket[]>(sqlFindExistingAuthorName, [authorData.authorName]);
+        // Потому что один автор у нас и так должен быть указан, без этого будет ошибка 400
+        const sqlAuthorsNamesData: string[] = [authorData.authorsNames[0]];
+
+        if (authorData.authorsNames.length > 1) {
+            for (let i = 1; i < authorData.authorsNames.length; i++) {
+                sqlFindExistingAuthorsNames += ` OR LOWER(authors.author_name) = LOWER(?)`;
+                sqlAuthorsNamesData.push(authorData.authorsNames[i]);
+            }
+        }
+
+        const [existingAuthorsData] = await db.query<RowDataPacket[]>(sqlFindExistingAuthorsNames, sqlAuthorsNamesData);
         
-        if (!existingAuthorData[0]?.name) {
-            const sqlAddAuthor: string = `
-                INSERT INTO authors(author_name)
-                VALUES(?)
-            `;
-
-            const sqlGetLastAuthorId: string = `
-                SELECT MAX(authors.author_id) AS id
-                FROM authors
-            `;
-            
-            await db.query<RowDataPacket[]>(sqlAddAuthor, [authorData.authorName]);
-            const [lastAuthorId] = await db.query<RowDataPacket[]>(sqlGetLastAuthorId);
-
-            return lastAuthorId[0].id;
+        const authorsId: number[] = [];
+        const existingAuthorsNames: string[] = existingAuthorsData.map(existingAuthorData => existingAuthorData.author_name);
+        // const nonExistionAuthorsNames: string[] = authorData.authorsNames.filter((authorName, i) => authorName != existingAuthorsNames[i]); 
+        
+        for (let i = 0, existIdx = 0; i < authorData.authorsNames.length; i++) {
+            if (!existingAuthorsNames.includes(authorData.authorsNames[i])) {
+                const sqlAddAuthor: string = `INSERT INTO authors(author_name) VALUES(?)`;
+                
+                const [newAuthorOkPacket] = await db.query<OkPacket>(sqlAddAuthor, [authorData.authorsNames[i]]);
+                
+                authorsId.push(newAuthorOkPacket.insertId);
+            }
+            else {
+                authorsId.push(existingAuthorsData[existIdx].author_id);
+                existIdx++;
+            }
         }
-        else {
-            return existingAuthorData[0].id;
-        }
+        console.log(authorsId);
+        return authorsId;
     }
 
-    const sqlCreateBinding = `
-        INSERT INTO books_authors_id
-        VALUES(?, ?);
-    `;
+    const sqlNewBookData: number[] = [];
+
+    let sqlCreateBinding = `
+        INSERT INTO books_authors_id VALUES`;
 
     const bookId = await addBookData(newBookAndAuthorData as NewBookData);
     const authorId = await addAuthorData(newBookAndAuthorData as AuthorData);
 
-    await db.query<RowDataPacket[]>(sqlCreateBinding, [bookId, authorId]);
+    for (let i = 0; i < authorId.length; i++) {
+        sqlCreateBinding += `
+            (?, ?),`;
+        sqlNewBookData.push(bookId);
+        sqlNewBookData.push(authorId[i]);
+    }
+    sqlCreateBinding = sqlCreateBinding.slice(0, -1);
+    await db.query<RowDataPacket[]>(sqlCreateBinding, sqlNewBookData);
 }
 
 export const addBookImageService = async () => {

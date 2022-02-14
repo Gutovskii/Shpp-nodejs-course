@@ -45,7 +45,7 @@ var getAdminPage = function (req, res) { return __awaiter(void 0, void 0, void 0
         switch (_a.label) {
             case 0:
                 booksPerPage = 6;
-                fields = ['books.book_id', 'books.title', 'books.year_of_publication', 'books.pages', 'books.clicked', 'books.wishful', 'authors.author_name'];
+                fields = ['books.book_id', 'books.title', 'books.year_of_publication', 'books.pages', 'books.clicked', 'books.wishful', 'GROUP_CONCAT(CONCAT(" ", authors.author_name)) AS authorsNames'];
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);

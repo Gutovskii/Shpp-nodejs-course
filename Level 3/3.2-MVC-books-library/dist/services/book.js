@@ -40,84 +40,96 @@ exports.deleteBookService = exports.addBookImageService = exports.addBookService
 var connection_1 = require("../database/connection");
 var setMulter_1 = require("../utils/setMulter");
 var getBookService = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var sql, bookData;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var sqlGetBookData, bookData;
+    var _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                sql = "\n        SELECT books_authors_id.book_id, books.title, books.year_of_publication, books.pages, books.description, authors.author_name FROM books\n        JOIN books_authors_id ON books_authors_id.book_id = books.book_id\n        JOIN authors ON books_authors_id.author_id = authors.author_id\n        WHERE books.book_id = ?";
-                return [4 /*yield*/, connection_1.db.query(sql, [id])];
+                sqlGetBookData = "\n        SELECT books_authors_id.book_id, books.title, books.year_of_publication, books.pages, books.description, GROUP_CONCAT(CONCAT(' ', authors.author_name)) AS authorsNames FROM books\n        JOIN books_authors_id ON books_authors_id.book_id = books.book_id\n        JOIN authors ON books_authors_id.author_id = authors.author_id\n        WHERE books.book_id = ?";
+                return [4 /*yield*/, connection_1.db.query(sqlGetBookData, [id])];
             case 1:
-                bookData = (_a.sent())[0];
-                return [2 /*return*/, bookData[0]];
+                bookData = (_b.sent())[0];
+                if ((_a = bookData[0]) === null || _a === void 0 ? void 0 : _a.book_id) {
+                    return [2 /*return*/, bookData[0]];
+                }
+                else {
+                    return [2 /*return*/, { errorNotFound: '404 Not Found' }];
+                }
+                return [2 /*return*/];
         }
     });
 }); };
 exports.getBookService = getBookService;
 var addBookService = function (newBookAndAuthorData) { return __awaiter(void 0, void 0, void 0, function () {
-    var addBookData, addAuthorData, sqlCreateBinding, bookId, authorId;
+    var addBookData, addAuthorData;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                addBookData = function (newBookData) { return __awaiter(void 0, void 0, void 0, function () {
-                    var sqlGetLastBookId, sqlCreateNewBook, lastBookId, dataForQuery;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                sqlGetLastBookId = "\n            SELECT MAX(books.book_id) AS id\n            FROM books";
-                                sqlCreateNewBook = "\n            INSERT INTO books(book_id, title, year_of_publication, pages, description)\n            VALUES(?, ?, ?, ?, ?)";
-                                return [4 /*yield*/, connection_1.db.query(sqlGetLastBookId)];
-                            case 1:
-                                lastBookId = (_a.sent())[0];
-                                dataForQuery = [
-                                    lastBookId[0].id + 1,
-                                    newBookData.title,
-                                    Number(newBookData.year),
-                                    Number(newBookData.pages),
-                                    newBookData.description,
-                                ];
-                                return [4 /*yield*/, connection_1.db.query(sqlCreateNewBook, dataForQuery)];
-                            case 2:
-                                _a.sent();
-                                return [2 /*return*/, lastBookId[0].id + 1];
+        addBookData = function (newBookData) { return __awaiter(void 0, void 0, void 0, function () {
+            var sqlGetLastBookId, sqlCreateNewBook, lastBookId, dataForQuery;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        sqlGetLastBookId = "\n            SELECT MAX(books.book_id) AS id\n            FROM books";
+                        sqlCreateNewBook = "\n            INSERT INTO books(book_id, title, year_of_publication, pages, description)\n            VALUES(?, ?, ?, ?, ?)";
+                        return [4 /*yield*/, connection_1.db.query(sqlGetLastBookId)];
+                    case 1:
+                        lastBookId = (_a.sent())[0];
+                        dataForQuery = [
+                            lastBookId[0].id + 1,
+                            newBookData.title,
+                            Number(newBookData.year),
+                            Number(newBookData.pages),
+                            newBookData.description,
+                        ];
+                        return [4 /*yield*/, connection_1.db.query(sqlCreateNewBook, dataForQuery)];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/, lastBookId[0].id + 1];
+                }
+            });
+        }); };
+        addAuthorData = function (authorData) { return __awaiter(void 0, void 0, void 0, function () {
+            var sqlFindExistingAuthorsNames, sqlAuthorsNamesData, i, existingAuthorsData, authorsId, existingAuthorsNames, nonExistIdx, existIdx, sqlAddAuthor, newAuthorOkPacket;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        sqlFindExistingAuthorsNames = "\n            SELECT authors.author_id, authors.author_name\n            FROM authors\n            WHERE LOWER(authors.author_name) = LOWER(?)";
+                        sqlAuthorsNamesData = [authorData.authorsNames[0]];
+                        if (authorData.authorsNames.length > 1) {
+                            for (i = 1; i < authorData.authorsNames.length; i++) {
+                                sqlFindExistingAuthorsNames += " OR LOWER(authors.author_name) = LOWER(?)";
+                                sqlAuthorsNamesData.push(authorData.authorsNames[i]);
+                            }
                         }
-                    });
-                }); };
-                addAuthorData = function (authorData) { return __awaiter(void 0, void 0, void 0, function () {
-                    var sqlFindExistingAuthorName, existingAuthorData, sqlAddAuthor, sqlGetLastAuthorId, lastAuthorId;
-                    var _a;
-                    return __generator(this, function (_b) {
-                        switch (_b.label) {
-                            case 0:
-                                sqlFindExistingAuthorName = "\n            SELECT authors.author_id AS id, authors.author_name AS name\n            FROM authors\n            WHERE authors.author_name = ?";
-                                return [4 /*yield*/, connection_1.db.query(sqlFindExistingAuthorName, [authorData.authorName])];
-                            case 1:
-                                existingAuthorData = (_b.sent())[0];
-                                if (!!((_a = existingAuthorData[0]) === null || _a === void 0 ? void 0 : _a.name)) return [3 /*break*/, 4];
-                                sqlAddAuthor = "\n                INSERT INTO authors(author_name)\n                VALUES(?)\n            ";
-                                sqlGetLastAuthorId = "\n                SELECT MAX(authors.author_id) AS id\n                FROM authors\n            ";
-                                return [4 /*yield*/, connection_1.db.query(sqlAddAuthor, [authorData.authorName])];
-                            case 2:
-                                _b.sent();
-                                return [4 /*yield*/, connection_1.db.query(sqlGetLastAuthorId)];
-                            case 3:
-                                lastAuthorId = (_b.sent())[0];
-                                return [2 /*return*/, lastAuthorId[0].id];
-                            case 4: return [2 /*return*/, existingAuthorData[0].id];
-                        }
-                    });
-                }); };
-                sqlCreateBinding = "\n        INSERT INTO books_authors_id\n        VALUES(?, ?);\n    ";
-                return [4 /*yield*/, addBookData(newBookAndAuthorData)];
-            case 1:
-                bookId = _a.sent();
-                return [4 /*yield*/, addAuthorData(newBookAndAuthorData)];
-            case 2:
-                authorId = _a.sent();
-                return [4 /*yield*/, connection_1.db.query(sqlCreateBinding, [bookId, authorId])];
-            case 3:
-                _a.sent();
-                return [2 /*return*/];
-        }
+                        return [4 /*yield*/, connection_1.db.query(sqlFindExistingAuthorsNames, sqlAuthorsNamesData)];
+                    case 1:
+                        existingAuthorsData = (_a.sent())[0];
+                        authorsId = [];
+                        existingAuthorsNames = existingAuthorsData.map(function (existingAuthorData) { return existingAuthorData.author_name; });
+                        nonExistIdx = 0, existIdx = 0;
+                        _a.label = 2;
+                    case 2:
+                        if (!(nonExistIdx < authorData.authorsNames.length && existIdx < existingAuthorsNames.length)) return [3 /*break*/, 6];
+                        if (!!existingAuthorsNames.includes(authorData.authorsNames[nonExistIdx])) return [3 /*break*/, 4];
+                        sqlAddAuthor = "INSERT INTO authors(author_name) VALUES(?)";
+                        return [4 /*yield*/, connection_1.db.query(sqlAddAuthor)];
+                    case 3:
+                        newAuthorOkPacket = (_a.sent())[0];
+                        console.log(newAuthorOkPacket);
+                        authorsId.push(newAuthorOkPacket.insertId);
+                        nonExistIdx++;
+                        return [3 /*break*/, 5];
+                    case 4:
+                        authorsId.push(existingAuthorsData[existIdx].author_id);
+                        existIdx++;
+                        _a.label = 5;
+                    case 5: return [3 /*break*/, 2];
+                    case 6:
+                        console.log(authorsId);
+                        return [2 /*return*/];
+                }
+            });
+        }); };
+        return [2 /*return*/];
     });
 }); };
 exports.addBookService = addBookService;

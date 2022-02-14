@@ -24,11 +24,11 @@ export interface NewBookData {
 }
 
 export interface AuthorData {
-    authorName: string
+    authorsNames: string[]
 }
 
-export interface NewError {
+export interface NewErrorNotFound {
     errorNotFound: string
 }
 
-export type BookData = Promise<RowDataPacket> | NewError;
+export type GetBookDataResult = Promise<RowDataPacket> | NewErrorNotFound;
