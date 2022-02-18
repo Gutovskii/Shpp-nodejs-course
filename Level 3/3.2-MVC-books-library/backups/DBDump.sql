@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `authors` (
   `author_id` int(11) NOT NULL AUTO_INCREMENT,
   `author_name` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`author_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 41 DEFAULT CHARSET = utf8mb4;
+) ENGINE = InnoDB AUTO_INCREMENT = 77 DEFAULT CHARSET = utf8mb4;
 
 # ------------------------------------------------------------
 # SCHEMA DUMP FOR TABLE: books
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `books` (
   `wishful` int(10) NOT NULL DEFAULT 0,
   `deleted` tinyint(4) NOT NULL DEFAULT 0,
   PRIMARY KEY (`book_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 15 DEFAULT CHARSET = utf8mb4;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 DEFAULT CHARSET = utf8mb4;
 
 # ------------------------------------------------------------
 # SCHEMA DUMP FOR TABLE: books_authors_id
@@ -108,11 +108,11 @@ VALUES
 INSERT INTO
   `authors` (`author_id`, `author_name`)
 VALUES
-  (39, 'Abobus Bibas');
+  (53, 'Biba Bobus');
 INSERT INTO
   `authors` (`author_id`, `author_name`)
 VALUES
-  (40, NULL);
+  (70, 'Aboba Bibus');
 
 # ------------------------------------------------------------
 # DATA DUMP FOR TABLE: books
@@ -180,7 +180,7 @@ VALUES
     2010,
     69,
     'Книга про Python для анализа данных',
-    5,
+    6,
     0,
     0
   );
@@ -202,8 +202,8 @@ VALUES
     2012,
     212,
     'Книга про Философию Java, 4-ое издание',
+    6,
     2,
-    0,
     0
   );
 INSERT INTO

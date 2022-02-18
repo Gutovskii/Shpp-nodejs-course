@@ -129,14 +129,8 @@ html(lang='ru')
 		
 		script.
 			function clickpp(id) {
-				fetch('http://localhost:3000/api/v1/clicked', {
-					method: 'PUT',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({
-						id
-					})
+				fetch('http://localhost:3000/api/v1/clicked/' + id, {
+					method: 'PUT'
 				})
 			}
 

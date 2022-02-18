@@ -65,22 +65,17 @@ $('.btnBookID').click(function() {
     //         " появится в библиотеке", bookId);
     // } else
     
-    fetch('http://localhost:3000/api/v1/wishful', {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            id: this.dataset.bookId
-        })
+    fetch('http://localhost:3000/api/v1/wishful/' + this.dataset.bookId, {
+        method: 'PUT'
     })
     .then(res => res.json())
     .then(res => {
         if (res.done) {
             Swal.fire('Отлично!', 'Книга свободна и ты можешь прийти за ней. Наш адрес: г. Кропивницкий, переулок Васильевский 10, 5 етаж. Лучше предварительно прозвонить и предупредить нас, чтобы не попасть в неловкую ситуацию. Тел. 099 196 254 69', 'success');
         }
-        else if (res.error) {
-            Swal.fire('Упс!', 'Произошла ошибка, загляните в консоль разработчика', 'error');
-        }
+    })
+    .catch(error => {
+        console.log(error);
+        Swal.fire('Упс!', 'Произошла ошибка, загляните в консоль разработчика', 'error');
     })
 });

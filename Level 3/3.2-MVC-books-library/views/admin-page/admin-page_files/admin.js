@@ -31,7 +31,7 @@ $(() => {
             reverseButtons: true
           }).then((result) => {
             if (result.isConfirmed) {
-                fetch('http://localhost:3000/admin/api/v1/delete/' + bookId)
+              fetch('http://localhost:3000/admin/api/v1/delete/' + bookId)
               swalWithBootstrapButtons.fire(
                 'Deleted!',
                 'Your file has been deleted.',
