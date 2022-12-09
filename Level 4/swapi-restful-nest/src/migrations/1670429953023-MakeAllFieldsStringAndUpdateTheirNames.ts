@@ -1,0 +1,122 @@
+import { MigrationInterface, QueryRunner } from "typeorm";
+
+export class MakeAllFieldsStringAndUpdateTheirNames1670429953023 implements MigrationInterface {
+    name = 'MakeAllFieldsStringAndUpdateTheirNames1670429953023'
+
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE \`planet\` DROP COLUMN \`climat\``);
+        await queryRunner.query(`ALTER TABLE \`starship\` DROP COLUMN \`crew_count\``);
+        await queryRunner.query(`ALTER TABLE \`starship\` DROP COLUMN \`passengers_count\``);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` DROP COLUMN \`crew_count\``);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` DROP COLUMN \`passengers_count\``);
+        await queryRunner.query(`ALTER TABLE \`film\` DROP COLUMN \`realise_date\``);
+        await queryRunner.query(`ALTER TABLE \`planet\` ADD \`climate\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`starship\` ADD \`crew\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`starship\` ADD \`passengers\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` ADD \`crew\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` ADD \`passengers\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`film\` ADD \`episode_id\` int NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`film\` ADD \`release_date\` int NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`species\` DROP FOREIGN KEY \`FK_f7e93a1974cc86fd87ce6777319\``);
+        await queryRunner.query(`ALTER TABLE \`species\` DROP COLUMN \`average_height\``);
+        await queryRunner.query(`ALTER TABLE \`species\` ADD \`average_height\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`species\` DROP COLUMN \`average_lifespan\``);
+        await queryRunner.query(`ALTER TABLE \`species\` ADD \`average_lifespan\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`species\` CHANGE \`homeworld_id\` \`homeworld_id\` int NULL`);
+        await queryRunner.query(`ALTER TABLE \`planet\` DROP COLUMN \`diameter\``);
+        await queryRunner.query(`ALTER TABLE \`planet\` ADD \`diameter\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`planet\` DROP COLUMN \`rotation_period\``);
+        await queryRunner.query(`ALTER TABLE \`planet\` ADD \`rotation_period\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`planet\` DROP COLUMN \`orbital_period\``);
+        await queryRunner.query(`ALTER TABLE \`planet\` ADD \`orbital_period\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`planet\` DROP COLUMN \`gravity\``);
+        await queryRunner.query(`ALTER TABLE \`planet\` ADD \`gravity\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`planet\` DROP COLUMN \`population\``);
+        await queryRunner.query(`ALTER TABLE \`planet\` ADD \`population\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`planet\` DROP COLUMN \`surface_water\``);
+        await queryRunner.query(`ALTER TABLE \`planet\` ADD \`surface_water\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`starship\` DROP COLUMN \`cost_in_credits\``);
+        await queryRunner.query(`ALTER TABLE \`starship\` ADD \`cost_in_credits\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`starship\` DROP COLUMN \`length\``);
+        await queryRunner.query(`ALTER TABLE \`starship\` ADD \`length\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`starship\` DROP COLUMN \`mglt\``);
+        await queryRunner.query(`ALTER TABLE \`starship\` ADD \`mglt\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`starship\` DROP COLUMN \`hyperdrive_rating\``);
+        await queryRunner.query(`ALTER TABLE \`starship\` ADD \`hyperdrive_rating\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`starship\` DROP COLUMN \`cargo_capacity\``);
+        await queryRunner.query(`ALTER TABLE \`starship\` ADD \`cargo_capacity\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` DROP COLUMN \`length\``);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` ADD \`length\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` DROP COLUMN \`cost_in_credits\``);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` ADD \`cost_in_credits\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` DROP COLUMN \`max_atmospering_speed\``);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` ADD \`max_atmospering_speed\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` DROP COLUMN \`cargo_capacity\``);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` ADD \`cargo_capacity\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`person\` DROP FOREIGN KEY \`FK_e9797533c90a8211d39784488f3\``);
+        await queryRunner.query(`ALTER TABLE \`person\` DROP COLUMN \`birth_year\``);
+        await queryRunner.query(`ALTER TABLE \`person\` ADD \`birth_year\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`person\` CHANGE \`homeworld_id\` \`homeworld_id\` int NULL`);
+        await queryRunner.query(`ALTER TABLE \`species\` ADD CONSTRAINT \`FK_f7e93a1974cc86fd87ce6777319\` FOREIGN KEY (\`homeworld_id\`) REFERENCES \`planet\`(\`id\`) ON DELETE SET NULL ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`person\` ADD CONSTRAINT \`FK_e9797533c90a8211d39784488f3\` FOREIGN KEY (\`homeworld_id\`) REFERENCES \`planet\`(\`id\`) ON DELETE SET NULL ON UPDATE NO ACTION`);
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE \`person\` DROP FOREIGN KEY \`FK_e9797533c90a8211d39784488f3\``);
+        await queryRunner.query(`ALTER TABLE \`species\` DROP FOREIGN KEY \`FK_f7e93a1974cc86fd87ce6777319\``);
+        await queryRunner.query(`ALTER TABLE \`person\` CHANGE \`homeworld_id\` \`homeworld_id\` int NULL DEFAULT 'NULL'`);
+        await queryRunner.query(`ALTER TABLE \`person\` DROP COLUMN \`birth_year\``);
+        await queryRunner.query(`ALTER TABLE \`person\` ADD \`birth_year\` date NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`person\` ADD CONSTRAINT \`FK_e9797533c90a8211d39784488f3\` FOREIGN KEY (\`homeworld_id\`) REFERENCES \`planet\`(\`id\`) ON DELETE SET NULL ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` DROP COLUMN \`cargo_capacity\``);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` ADD \`cargo_capacity\` double(22) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` DROP COLUMN \`max_atmospering_speed\``);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` ADD \`max_atmospering_speed\` double(22) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` DROP COLUMN \`cost_in_credits\``);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` ADD \`cost_in_credits\` decimal(10,0) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` DROP COLUMN \`length\``);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` ADD \`length\` double(22) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`starship\` DROP COLUMN \`cargo_capacity\``);
+        await queryRunner.query(`ALTER TABLE \`starship\` ADD \`cargo_capacity\` double(22) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`starship\` DROP COLUMN \`hyperdrive_rating\``);
+        await queryRunner.query(`ALTER TABLE \`starship\` ADD \`hyperdrive_rating\` double(22) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`starship\` DROP COLUMN \`mglt\``);
+        await queryRunner.query(`ALTER TABLE \`starship\` ADD \`mglt\` double(22) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`starship\` DROP COLUMN \`length\``);
+        await queryRunner.query(`ALTER TABLE \`starship\` ADD \`length\` double(22) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`starship\` DROP COLUMN \`cost_in_credits\``);
+        await queryRunner.query(`ALTER TABLE \`starship\` ADD \`cost_in_credits\` decimal(10,0) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`planet\` DROP COLUMN \`surface_water\``);
+        await queryRunner.query(`ALTER TABLE \`planet\` ADD \`surface_water\` double(22) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`planet\` DROP COLUMN \`population\``);
+        await queryRunner.query(`ALTER TABLE \`planet\` ADD \`population\` int NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`planet\` DROP COLUMN \`gravity\``);
+        await queryRunner.query(`ALTER TABLE \`planet\` ADD \`gravity\` double(22) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`planet\` DROP COLUMN \`orbital_period\``);
+        await queryRunner.query(`ALTER TABLE \`planet\` ADD \`orbital_period\` int NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`planet\` DROP COLUMN \`rotation_period\``);
+        await queryRunner.query(`ALTER TABLE \`planet\` ADD \`rotation_period\` int NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`planet\` DROP COLUMN \`diameter\``);
+        await queryRunner.query(`ALTER TABLE \`planet\` ADD \`diameter\` int NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`species\` CHANGE \`homeworld_id\` \`homeworld_id\` int NULL DEFAULT 'NULL'`);
+        await queryRunner.query(`ALTER TABLE \`species\` DROP COLUMN \`average_lifespan\``);
+        await queryRunner.query(`ALTER TABLE \`species\` ADD \`average_lifespan\` double(22) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`species\` DROP COLUMN \`average_height\``);
+        await queryRunner.query(`ALTER TABLE \`species\` ADD \`average_height\` double(22) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`species\` ADD CONSTRAINT \`FK_f7e93a1974cc86fd87ce6777319\` FOREIGN KEY (\`homeworld_id\`) REFERENCES \`planet\`(\`id\`) ON DELETE SET NULL ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`film\` DROP COLUMN \`release_date\``);
+        await queryRunner.query(`ALTER TABLE \`film\` DROP COLUMN \`episode_id\``);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` DROP COLUMN \`passengers\``);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` DROP COLUMN \`crew\``);
+        await queryRunner.query(`ALTER TABLE \`starship\` DROP COLUMN \`passengers\``);
+        await queryRunner.query(`ALTER TABLE \`starship\` DROP COLUMN \`crew\``);
+        await queryRunner.query(`ALTER TABLE \`planet\` DROP COLUMN \`climate\``);
+        await queryRunner.query(`ALTER TABLE \`film\` ADD \`realise_date\` date NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` ADD \`passengers_count\` int NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`vehicle\` ADD \`crew_count\` int NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`starship\` ADD \`passengers_count\` int NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`starship\` ADD \`crew_count\` int NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`planet\` ADD \`climat\` varchar(255) NOT NULL`);
+    }
+
+}
