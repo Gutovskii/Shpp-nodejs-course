@@ -6,14 +6,14 @@ import { AuthService } from "../auth.service";
 
 @Injectable()
 export class LocalRegisterStrategy extends PassportStrategy(Strategy, CommonEnum.STRATEGY_LOCAL_REGISTER) {
-    constructor (
+    constructor(
         private _authService: AuthService
     ) {
         super();
     }
 
-    async validate(username: string, password: string) {
+    async validate(username: string, password: string): Promise<{ token: string }> {
         const token = await this._authService.register(username, password);
-        return { token };
+        return { token }
     }
 }

@@ -30,8 +30,7 @@ export class SpeciesController {
     @UsePipes(ParseIntPipe)
     @RolesAccess(Roles.USER)
     async getSpeciesByPage(@Query('page') page: number, @Query('count') count: number) {
-        const partOfSpecies = await this._speciesService.findByPage(page, count);
-        return partOfSpecies;
+        return this._speciesService.findByPage(page, count);
     }
 
     @Get(':id')
@@ -47,7 +46,7 @@ export class SpeciesController {
     @UseInterceptors(FilesInterceptor('images', ImagesEnum.MAX_COUNT, imageMulterOptions))
     async createSpecies(@Body(ValidationPipe) dto: CreateSpeciesDto, @UploadedFiles() images: Express.Multer.File[]) {
         const speciesToCreate = await this._mapper.mapAsync(dto, CreateSpeciesDto, Species);
-        return await this._speciesService.create(speciesToCreate, images);
+        return this._speciesService.create(speciesToCreate, images);
     }
 
     @Put(':id')
@@ -55,14 +54,14 @@ export class SpeciesController {
         const species = await this._speciesService.findOne(id);
         if (!species) throw new NotFoundException();
         const speciesToUpdate = await this._mapper.mapAsync(dto, UpdateSpeciesDto, Species);
-        return await this._speciesService.update(id, speciesToUpdate);
+        return this._speciesService.update(id, speciesToUpdate);
     }
 
     @Delete(':id')
     async removeSpecies(@Param('id', ParseIntPipe) id: number) {
         const speciesToDelete = await this._speciesService.findOne(id);
         if (!speciesToDelete) throw new NotFoundException();
-        return await this._speciesService.remove(speciesToDelete);
+        return this._speciesService.remove(speciesToDelete);
     }
 
     @Post('add-images/:id')
@@ -73,20 +72,20 @@ export class SpeciesController {
                     @Body(ValidationPipe) dto: AddImagesDto) {
         const species = await this._speciesService.findOne(id);
         if (!species) throw new NotFoundException();
-        return await this._speciesService.addImages(species, images);
+        return this._speciesService.addImages(species, images);
     }
 
     @Put('add-relations/:id')
     async addRelations(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe) relations: SpeciesRelations) {
         const speciesToUpdate = await this._speciesService.findOne(id);
         if (!speciesToUpdate) throw new NotFoundException(); 
-        return await this._speciesService.addRelations(speciesToUpdate, {...relations});
+        return this._speciesService.addRelations(speciesToUpdate, {...relations});
     }
 
     @Delete('remove-relations/:id')
     async removeRelations(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe) relations: SpeciesRelations) {
         const speciesToUpdate = await this._speciesService.findOne(id);
         if (!speciesToUpdate) throw new NotFoundException();
-        return await this._speciesService.removeRelations(speciesToUpdate, {...relations});
+        return this._speciesService.removeRelations(speciesToUpdate, {...relations});
     }
 }

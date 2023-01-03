@@ -8,7 +8,6 @@ import { CommonEnum } from 'src/common/common.enum';
 import { RepositoryWrapper } from 'src/repository/repository.wrapper';
 import { PublicImage } from './entities/public-image.entity';
 import { FileImage } from './entities/file-image.entity';
-import { DeleteImagesDto } from 'src/api/images/dto/delete-images.dto';
 import { In } from 'typeorm';
 
 @Injectable()
@@ -25,7 +24,7 @@ export class ImagesService {
         
         const uploadedResultsPromises = images.map(publicImage =>
             this.s3.upload({
-                Bucket: this._configService.get('AWS_PUBLIC_BUCKET_NAME'),
+                Bucket: this._configService.get('aws.publicBucketName'),
                 Body: publicImage.buffer,
                 Key: `${uuid.v4() + path.extname(publicImage.originalname)}`
             }).promise()
@@ -38,14 +37,14 @@ export class ImagesService {
             publicImage.url = uploadedResult.Location
             return publicImage;
         });
-
-        return await this._repoWrapper.publicImages.createMany(publicImagesToCreate);
+        
+        return this._repoWrapper.publicImages.createMany(publicImagesToCreate);
     }
 
     async deletePublicImages(images: PublicImage[]): Promise<void> {
         const deletedResultsPromises = images.map(publicImage => 
             this.s3.deleteObject({
-                Bucket: this._configService.get('AWS_PUBLIC_BUCKET_NAME'),
+                Bucket: this._configService.get('aws.publicBucketName'),
                 Key: publicImage.key
             }).promise()
         );
@@ -68,7 +67,7 @@ export class ImagesService {
         });
         await Promise.all(createFilesPromises);
 
-        return await this._repoWrapper.fileImages.createMany(fileImagesToCreate);
+        return this._repoWrapper.fileImages.createMany(fileImagesToCreate);
     }
 
     async deleteFileImages(images: FileImage[]): Promise<void> {
@@ -79,9 +78,11 @@ export class ImagesService {
         await this._repoWrapper.fileImages.removeMany(images);
     }
 
-    async deleteImagesByIds(ids: number[]) {
-        const publicImagesToDelete = await this._repoWrapper.publicImages.find({where: {id: In(ids)}});
-        const fileImagesToDelete = await this._repoWrapper.fileImages.find({where: {id: In(ids)}});
+    async deleteImagesByIds(ids: number[]): Promise<void> {
+        const [publicImagesToDelete, fileImagesToDelete] = await Promise.all([
+            this._repoWrapper.publicImages.find({where: {id: In(ids)}}),
+            this._repoWrapper.fileImages.find({where: {id: In(ids)}})
+        ]);
         await this.deletePublicImages(publicImagesToDelete);
         await this.deleteFileImages(fileImagesToDelete);
     }

@@ -1,26 +1,31 @@
-import { forwardRef, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { In } from "typeorm";
 import { RepositoryWrapper } from "src/repository/repository.wrapper";
 import { RolesService } from "../roles/roles.service";
+import { PaginationResult } from "src/common/interfaces/pagination.interface";
+import { User } from "./user.entity";
+import { Role } from "../roles/role.entity";
+import { Roles } from "../roles/roles.enum";
 
 @Injectable()
 export class UsersService {
     constructor(
         private _repoWrapper: RepositoryWrapper,
-        @Inject(forwardRef(() => RolesService)) private _rolesService: RolesService
+        @Inject(forwardRef(() => RolesService))
+        private _rolesService: RolesService
     ) {}
 
-    async getUsersByPage(page: number, count: number) {
-        return await this._repoWrapper.users.findByPage(page, count);
+    findByPage(page: number, count: number): Promise<PaginationResult<User>> {
+        return this._repoWrapper.users.findByPage(page, count);
     }
 
-    async getUsersByRoles(roleNames: string[]) {
-        return await this._repoWrapper.users.find({where: {roles: In(roleNames)}});
+    findByRoles(roleNames: string[]): Promise<User[]> {
+        return this._repoWrapper.users.find({where: {roles: In(roleNames)}});
     }
 
-    async getUserByName(username: string, ignoreExistance = false) {
+    async findByName(username: string, ignoreExistance = false): Promise<User> {
         const user = await this._repoWrapper.users.findOne({
-            where: {username},
+            where: { username },
             relations: {
                 roles: true
             }
@@ -29,21 +34,37 @@ export class UsersService {
         return user;
     }
 
-    async deleteUserByName(username: string) {
-        const userToDelete = await this.getUserByName(username);
-        return await this._repoWrapper.users.remove(userToDelete);
+    async deleteByName(username: string): Promise<User> {
+        const userToDelete = await this.findByName(username);
+        return this._repoWrapper.users.remove(userToDelete);
     }
 
-    async addRoleToUser(username: string, roleName: string) {
-        const user = await this.getUserByName(username);
-        const role = await this._rolesService.getRoleByName(roleName);
+    async addRole(username: string, roleName: string): Promise<User | void> {
+        const user = await this.findByName(username);
+        const role = await this._rolesService.findByName(roleName);
+        if (!role) {
+            const newRole = new Role();
+            newRole.name = roleName;
+            await this._rolesService.create(newRole);
+            return;
+        }
+        if (role.name === Roles.ADMIN) {
+            user.roles = user.roles.filter(role => role.name !== Roles.USER);
+        }
         user.roles.push(role);
-        return await this._repoWrapper.users.save(user);
+        return this._repoWrapper.users.save(user);
     }
 
-    async removeRoleFromUser(username: string, roleName: string) {
-        const user = await this.getUserByName(username);
+    async removeRole(username: string, roleName: string) {
+        const user = await this.findByName(username);
+        if (user.roles.length === 1 && roleName === Roles.USER) {
+            throw new BadRequestException(`Impossible to delete last ${Roles.USER} role`);
+        }
         user.roles = user.roles.filter(role => role.name !== roleName);
-        return await this._repoWrapper.users.save(user);
+        if (!user.roles.length) {
+            const userRole = await this._rolesService.findByName(Roles.USER);
+            user.roles.push(userRole);
+        }
+        return this._repoWrapper.users.save(user);
     }
 }

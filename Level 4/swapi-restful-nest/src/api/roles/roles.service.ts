@@ -12,38 +12,38 @@ export class RolesService {
         @Inject(forwardRef(() => UsersService)) private _usersService: UsersService
     ) {}
 
-    async getRoles() {
-        return await this._repoWrapper.roles.find({});
+    findAll(): Promise<Role[]> {
+        return this._repoWrapper.roles.find({});
     }
 
-    async getRoleByName(roleName: string) {
+    async findByName(roleName: string): Promise<Role> {
         const role = await this._repoWrapper.roles.findOne({where: {name: roleName}});
         if (!role) throw new NotFoundException(`Role '${role.name}' is not found`);
         return role;
     }
 
-    async getRoleByNames(...roleNames: string[]) {
+    async findByNames(...roleNames: string[]): Promise<Role[]> {
         const roles = await this._repoWrapper.roles.find({where: {name: In(roleNames)}});
         if (!roles.length) throw new NotFoundException(`Roles '${roleNames.join(', ')}' are not found`);
         return roles;
     }
 
-    async create(role: Role) {
-        return await this._repoWrapper.roles.create(role);
+    create(role: Role): Promise<Role> {
+        return this._repoWrapper.roles.create(role);
     }
 
-    async delete(roleName: string) {
+    async delete(roleName: Roles): Promise<Role> {
         if (roleName === Roles.USER || roleName === Roles.ADMIN)
             throw new BadRequestException('Roles USER or ADMIN can\'t be deleted');
 
-        const roleToDelete = await this.getRoleByName(roleName);
-        const userRole = await this.getRoleByName(Roles.USER);
-        const users = await this._usersService.getUsersByRoles([roleToDelete.name]);
+        const roleToDelete = await this.findByName(roleName);
+        const userRole = await this.findByName(Roles.USER);
+        const users = await this._usersService.findByRoles([roleToDelete.name]);
         users.map(user => {
             if (user.roles.length === 1) user.roles.push(userRole);
         });
         await this._repoWrapper.users.updateMany(users);
         
-        return await this._repoWrapper.roles.remove(roleToDelete);
+        return this._repoWrapper.roles.remove(roleToDelete);
     }
 }

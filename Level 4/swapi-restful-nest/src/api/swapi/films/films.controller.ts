@@ -30,8 +30,7 @@ export class FilmsController {
     @UsePipes(ParseIntPipe)
     @RolesAccess(Roles.USER)
     async getFilmsByPage(@Query('page') page: number, @Query('count') count: number) {
-        const partOfFilms = await this._filmsService.findByPage(page, count);
-        return partOfFilms;
+        return this._filmsService.findByPage(page, count);
     }
 
     @Get(':id')
@@ -39,7 +38,7 @@ export class FilmsController {
     async getFilmById(@Param('id', ParseIntPipe) id: number) {
         const film = await this._filmsService.findOne(id);
         if (!film) throw new NotFoundException();
-        return film; 
+        return film;
     }
 
     @Post()
@@ -47,7 +46,7 @@ export class FilmsController {
     @UseInterceptors(FilesInterceptor('images', ImagesEnum.MAX_COUNT, imageMulterOptions))
     async createFilm(@Body(ValidationPipe) dto: CreateFilmDto, @UploadedFiles() images: Express.Multer.File[]) {
         const filmToCreate = await this._mapper.mapAsync(dto, CreateFilmDto, Film);
-        return await this._filmsService.create(filmToCreate, images);
+        return this._filmsService.create(filmToCreate, images);
     }
 
     @Put(':id')
@@ -55,14 +54,14 @@ export class FilmsController {
         const film = await this._filmsService.findOne(id);
         if (!film) throw new NotFoundException();
         const filmToUpdate = await this._mapper.mapAsync(dto, UpdateFilmDto, Film);
-        return await this._filmsService.update(id, filmToUpdate);
+        return this._filmsService.update(id, filmToUpdate);
     }
 
     @Delete(':id')
     async removeFilm(@Param('id', ParseIntPipe) id: number) {
         const filmToDelete = await this._filmsService.findOne(id);
         if (!filmToDelete) throw new NotFoundException();
-        return await this._filmsService.remove(filmToDelete);
+        return this._filmsService.remove(filmToDelete);
     }
 
     @Post('add-images/:id')
@@ -73,14 +72,14 @@ export class FilmsController {
                     @Body(ValidationPipe) dto: AddImagesDto) {
         const film = await this._filmsService.findOne(id);
         if (!film) throw new NotFoundException();
-        return await this._filmsService.addImages(film, images);
+        return this._filmsService.addImages(film, images);
     }
 
     @Put('add-relations/:id')
     async createRelations(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe) relations: FilmRelations) {
         const filmToUpdate = await this._filmsService.findOne(id);
         if (!filmToUpdate) throw new NotFoundException();
-        return await this._filmsService.addRelations(filmToUpdate, {...relations});
+        return this._filmsService.addRelations(filmToUpdate, {...relations});
     }
     
     @Delete('remove-relations/:id')

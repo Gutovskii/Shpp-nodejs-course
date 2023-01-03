@@ -14,12 +14,12 @@ export class StarshipsService {
         private _repoWrapper: RepositoryWrapper
     ) {}
 
-    async findByPage(page: number, count: number): Promise<PaginationResult<Starship>> {
-        return await this._repoWrapper.starships.findByPage(page, count);
+    findByPage(page: number, count: number): Promise<PaginationResult<Starship>> {
+        return this._repoWrapper.starships.findByPage(page, count);
     }
 
-    async findOne(id: number) {
-        const starship = await this._repoWrapper.starships.findOne({
+    findOne(id: number): Promise<Starship> {
+        const starship = this._repoWrapper.starships.findOne({
             where: { id },
             relations: {
                 films: true,
@@ -32,35 +32,45 @@ export class StarshipsService {
         return starship;
     }
 
-    async create(starship: Starship, images: Express.Multer.File[]) {
-        starship.publicImages = await this._imagesService.createPublicImages(images);
-        starship.fileImages = await this._imagesService.createFileImages(images);
-        return await this._repoWrapper.starships.create(starship);
+    async create(starship: Starship, images: Express.Multer.File[]): Promise<Starship> {
+        const [publicImages, fileImages] = await Promise.all([
+            this._imagesService.createPublicImages(images),
+            this._imagesService.createFileImages(images)
+        ]);
+        starship.publicImages = publicImages;
+        starship.fileImages = fileImages;
+        return this._repoWrapper.starships.create(starship);
     }
 
-    async update(id: number, starship: Starship) {
-        return await this._repoWrapper.starships.update(id, starship);
+    update(id: number, starship: Starship): Promise<Starship> {
+        return this._repoWrapper.starships.update(id, starship);
     }
 
-    async remove(entity: Starship) {
-        await this._imagesService.deletePublicImages(entity.publicImages);
-        await this._imagesService.deleteFileImages(entity.fileImages);
-        return await this._repoWrapper.starships.remove(entity);
+    async remove(starship: Starship): Promise<Starship> {
+        await Promise.all([
+            this._imagesService.deletePublicImages(starship.publicImages),
+            this._imagesService.deleteFileImages(starship.fileImages)
+        ]);
+        return this._repoWrapper.starships.remove(starship);
     }
 
-    async addImages(starship: Starship, images: Express.Multer.File[]) {
-        starship.publicImages.push(...await this._imagesService.createPublicImages(images));
-        starship.fileImages.push(...await this._imagesService.createFileImages(images));
-        return await this._repoWrapper.starships.save(starship);
+    async addImages(starship: Starship, images: Express.Multer.File[]): Promise<Starship> {
+        const [publicImages, fileImages] = await Promise.all([
+            this._imagesService.createPublicImages(images),
+            this._imagesService.createFileImages(images)
+        ]);
+        starship.publicImages.push(...publicImages);
+        starship.fileImages.push(...fileImages);
+        return this._repoWrapper.starships.save(starship);
     }
 
-    async addRelations(starship: Starship, relations: StarshipRelations) {
+    async addRelations(starship: Starship, relations: StarshipRelations): Promise<Starship> {
         const updatedVehicle = await this._relationsService.addRelations(starship, {...relations});
-        return await this._repoWrapper.starships.save(updatedVehicle);
+        return this._repoWrapper.starships.save(updatedVehicle);
     }
 
-    async removeRelations(starship: Starship, relations: StarshipRelations) {
+    async removeRelations(starship: Starship, relations: StarshipRelations): Promise<Starship> {
         const updatedVehicle = await this._relationsService.removeRelations(starship, {...relations});
-        return await this._repoWrapper.starships.save(updatedVehicle);
+        return this._repoWrapper.starships.save(updatedVehicle);
     }
 }

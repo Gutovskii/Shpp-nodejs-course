@@ -12,8 +12,8 @@ export class LocalLoginStrategy extends PassportStrategy(Strategy, CommonEnum.ST
         super();
     }
 
-    async validate(username: string, password: string) {
+    async validate(username: string, password: string): Promise<{ token: string }> {
         const token = await this._authService.login(username, password);
-        return { token };
+        return { token }
     }
 }

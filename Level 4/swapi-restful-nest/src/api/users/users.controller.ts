@@ -1,5 +1,5 @@
 import { Controller, Delete, Get, Param, Post, Query, UseGuards } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiParam, ApiTags } from "@nestjs/swagger";
 import { RolesAccess } from "../auth/decorators/auth.decorator";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { Roles } from "../roles/roles.enum";
@@ -16,27 +16,27 @@ export class UsersController {
     ) {}
 
     @Get()
-    async getUsersByPage(@Query('page') page: number, @Query('count') count: number) {
-        return await this._usersService.getUsersByPage(page, count);
+    async findByPage(@Query('page') page: number, @Query('count') count: number) {
+        return this._usersService.findByPage(page, count);
     }
 
     @Get(':username')
-    async getUserByName(@Param('username') username: string) {
-        return await this._usersService.getUserByName(username);
+    async findByName(@Param('username') username: string) {
+        return this._usersService.findByName(username);
     }
 
     @Delete(':username')
     async deleteUser(@Param('username') username: string) {
-        return await this._usersService.deleteUserByName(username);
+        return this._usersService.deleteByName(username);
     }
 
     @Post(':username/:roleName')
-    async addRoleToUser(@Param('username') username: string, @Param('roleName') roleName: string) {
-        return await this._usersService.addRoleToUser(username, roleName);
+    async addRole(@Param('username') username: string, @Param('roleName') roleName: string) {
+        return this._usersService.addRole(username, roleName);
     }
 
     @Delete(':username/:roleName')
-    async removeRoleFromUser(@Param('username') username: string, @Param('roleName') roleName: string) {
-        return await this._usersService.removeRoleFromUser(username, roleName);
+    async removeRole(@Param('username') username: string, @Param('roleName') roleName: string) {
+        return this._usersService.removeRole(username, roleName);
     }
 }

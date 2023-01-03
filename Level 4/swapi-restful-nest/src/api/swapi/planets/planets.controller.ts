@@ -30,8 +30,7 @@ export class PlanetsController {
 	@UsePipes(ParseIntPipe)
     @RolesAccess(Roles.USER)
 	async getPeopleByPage(@Query('page') page: number, @Query('count') count: number) {
-		const partOfPlanets = await this._planetsService.findByPage(page, count);
-		return partOfPlanets;
+		return this._planetsService.findByPage(page, count);
 	}
 
   	@Get(':id')
@@ -47,7 +46,7 @@ export class PlanetsController {
 	@UseInterceptors(FilesInterceptor('images', ImagesEnum.MAX_COUNT, imageMulterOptions))
 	async createPerson(@Body(ValidationPipe) dto: CreatePlanetDto, @UploadedFiles() images: Express.Multer.File[]) {
 		const planetToCreate = await this._mapper.mapAsync(dto, CreatePlanetDto, Planet);
-		return await this._planetsService.create(planetToCreate, images);
+		return this._planetsService.create(planetToCreate, images);
 	}
 
 	@Put(':id')
@@ -55,14 +54,14 @@ export class PlanetsController {
 		const planet = await this._planetsService.findOne(id);
 		if (!planet) throw new NotFoundException();
 		const planetToUpdate = await this._mapper.mapAsync(dto, UpdatePlanetDto, Planet);
-		return await this._planetsService.update(id, planetToUpdate);
+		return this._planetsService.update(id, planetToUpdate);
 	}
 
 	@Delete(':id')
 	async removePerson(@Param('id', ParseIntPipe) id: number) {
 		const planetToDelete = await this._planetsService.findOne(id);
 		if (!planetToDelete) throw new NotFoundException();
-		return await this._planetsService.remove(planetToDelete);
+		return this._planetsService.remove(planetToDelete);
 	}
 
     @Post('add-images/:id')
@@ -73,20 +72,20 @@ export class PlanetsController {
 					@Body(ValidationPipe) dto: AddImagesDto) {
         const planet = await this._planetsService.findOne(id);
         if (!planet) throw new NotFoundException();
-        return await this._planetsService.addImages(planet, images);
+        return this._planetsService.addImages(planet, images);
     }
 
 	@Put('add-relations/:id')
 	async addRelations(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe) relations: PlanetRelations) {
 		const planetToUpdate = await this._planetsService.findOne(id);
 		if (!planetToUpdate) throw new NotFoundException(); 
-		return await this._planetsService.addRelations(planetToUpdate, {...relations});
+		return this._planetsService.addRelations(planetToUpdate, {...relations});
 	}
 
 	@Delete('remove-relations/:id')
 	async removeRelations(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe) relations: PlanetRelations) {
 		const planetToUpdate = await this._planetsService.findOne(id);
 		if (!planetToUpdate) throw new NotFoundException();
-		return await this._planetsService.removeRelations(planetToUpdate, {...relations});
+		return this._planetsService.removeRelations(planetToUpdate, {...relations});
 	}
 }

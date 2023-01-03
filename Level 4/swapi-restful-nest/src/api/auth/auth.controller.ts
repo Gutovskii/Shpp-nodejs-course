@@ -3,7 +3,7 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { PassportResult } from './decorators/passport-result.decorator';
 import { AuthDto } from './dto/auth.dto';
-import { LocalLoginAuthGuard } from './guards/local-login-login-auth.guard';
+import { LocalLoginAuthGuard } from './guards/local-login-auth.guard';
 import { LocalRegisterAuthGuard } from './guards/local-register-auth.guard';
 
 @ApiTags('auth')

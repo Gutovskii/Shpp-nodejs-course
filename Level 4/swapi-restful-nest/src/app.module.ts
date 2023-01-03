@@ -16,18 +16,20 @@ import { SeederModule } from './seeder/seeder.module';
 import { CommonEnum } from './common/common.enum';
 import { PaginationMiddleware } from './common/middleware/pagination.middleware';
 import * as Joi from 'joi';
+import { getConfig } from './common/config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: `.${process.env.NODE_ENV}.env`,
+      isGlobal: true,
+      load: [getConfig],
       validationSchema: Joi.object({
         PORT: Joi.number().default(3000),
-        DB_HOST: Joi.string().required(),
-        DB_PORT: Joi.number().required(),
-        DB_USER: Joi.string().required(),
-        DB_PASS: Joi.string().allow(''),
-        DB_NAME: Joi.string().required(),
+        MYSQL_HOST: Joi.string().required(),
+        MYSQL_PORT: Joi.number().required(),
+        MYSQL_USER: Joi.string().required(),
+        MYSQL_PASS: Joi.string().allow(''),
+        MYSQL_NAME: Joi.string().required(),
         AWS_REGION: Joi.string().required(),
         AWS_ACCESS_KEY_ID: Joi.string().required(),
         AWS_SECRET_ACCESS_KEY: Joi.string().required(),

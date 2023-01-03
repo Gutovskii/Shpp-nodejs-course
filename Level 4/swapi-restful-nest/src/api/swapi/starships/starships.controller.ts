@@ -30,8 +30,7 @@ export class StarshipsController {
     @UsePipes(ParseIntPipe)
     @RolesAccess(Roles.USER)
     async getStarshipsByPage(@Query('page') page: number, @Query('count') count: number) {
-        const partOfStarships = await this._starshipsService.findByPage(page, count);
-        return partOfStarships;
+        return this._starshipsService.findByPage(page, count);
     }
 
     @Get(':id')
@@ -47,7 +46,7 @@ export class StarshipsController {
     @UseInterceptors(FilesInterceptor('images', ImagesEnum.MAX_COUNT, imageMulterOptions))
     async createStarship(@Body(ValidationPipe) dto: CreateStarshipDto, @UploadedFiles() images: Express.Multer.File[]) {
         const starshipToCreate = await this._mapper.mapAsync(dto, CreateStarshipDto, Starship);
-        return await this._starshipsService.create(starshipToCreate, images);
+        return this._starshipsService.create(starshipToCreate, images);
     }
 
     @Put(':id')
@@ -55,14 +54,14 @@ export class StarshipsController {
         const starship = await this._starshipsService.findOne(id);
         if (!starship) throw new NotFoundException();
         const starshipToUpdate = await this._mapper.mapAsync(dto, UpdateStarshipDto, Starship);
-        return await this._starshipsService.update(id, starshipToUpdate);
+        return this._starshipsService.update(id, starshipToUpdate);
     }
 
     @Delete(':id')
     async removeStarship(@Param('id', ParseIntPipe) id: number) {
         const starshipToDelete = await this._starshipsService.findOne(id);
         if (!starshipToDelete) throw new NotFoundException();
-        return await this._starshipsService.remove(starshipToDelete);
+        return this._starshipsService.remove(starshipToDelete);
     }
 
     @Post('add-images/:id')
@@ -73,20 +72,20 @@ export class StarshipsController {
                           @Body(ValidationPipe) dto: AddImagesDto) {
         const starship = await this._starshipsService.findOne(id);
         if (!starship) throw new NotFoundException();
-        return await this._starshipsService.addImages(starship, images);
+        return this._starshipsService.addImages(starship, images);
     }
 
     @Put('add-relations/:id')
     async addRelations(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe) relations: StarshipRelations) {
         const starshipToUpdate = await this._starshipsService.findOne(id);
         if (!starshipToUpdate) throw new NotFoundException(); 
-        return await this._starshipsService.addRelations(starshipToUpdate, {...relations});
+        return this._starshipsService.addRelations(starshipToUpdate, {...relations});
     }
 
     @Delete('remove-relations/:id')
     async removeRelations(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe) relations: StarshipRelations) {
         const starshipToUpdate = await this._starshipsService.findOne(id);
         if (!starshipToUpdate) throw new NotFoundException();
-        return await this._starshipsService.removeRelations(starshipToUpdate, {...relations});
+        return this._starshipsService.removeRelations(starshipToUpdate, {...relations});
     }
 }

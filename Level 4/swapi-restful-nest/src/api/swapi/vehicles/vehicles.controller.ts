@@ -33,8 +33,7 @@ export class VehiclesController {
     @UsePipes(ParseIntPipe)
     @RolesAccess(Roles.USER)
     async getVehiclesByPage(@Query('page') page: number, @Query('count') count: number) {
-        const partOfVehicles = await this._vehiclesService.findByPage(page, count);
-        return partOfVehicles;
+        return this._vehiclesService.findByPage(page, count);
     }
 
     @Get(':id')
@@ -50,7 +49,7 @@ export class VehiclesController {
     @UseInterceptors(FilesInterceptor('images', ImagesEnum.MAX_COUNT, imageMulterOptions))
     async createVehicle(@Body(ValidationPipe) dto: CreateVehicleDto, @UploadedFiles() images: Express.Multer.File[]) {
         const vehicleToCreate = await this._mapper.mapAsync(dto, CreateVehicleDto, Vehicle);
-        return await this._vehiclesService.create(vehicleToCreate, images);
+        return this._vehiclesService.create(vehicleToCreate, images);
     }
 
     @Put(':id')
@@ -58,14 +57,14 @@ export class VehiclesController {
         const vehicle = await this._vehiclesService.findOne(id);
         if (!vehicle) throw new NotFoundException();
         const vehicleToUpdate = await this._mapper.mapAsync(dto, UpdateVehicleDto, Vehicle);
-        return await this._vehiclesService.update(id, vehicleToUpdate);
+        return this._vehiclesService.update(id, vehicleToUpdate);
     }
 
     @Delete(':id')
     async removeVehicle(@Param('id', ParseIntPipe) id: number) {
         const vehicleToDelete = await this._vehiclesService.findOne(id);
         if (!vehicleToDelete) throw new NotFoundException();
-        return await this._vehiclesService.remove(vehicleToDelete);
+        return this._vehiclesService.remove(vehicleToDelete);
     }
 
     @Post('add-images/:id')
@@ -76,20 +75,20 @@ export class VehiclesController {
                     @Body(ValidationPipe) dto: AddImagesDto) {
         const vehicle = await this._vehiclesService.findOne(id);
         if (!vehicle) throw new NotFoundException();
-        return await this._vehiclesService.addImages(vehicle, images);
+        return this._vehiclesService.addImages(vehicle, images);
     }
 
     @Put('add-relations/:id')
     async addRelations(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe) relations: VehicleRelations) {
         const vehicleToUpdate = await this._vehiclesService.findOne(id);
         if (!vehicleToUpdate) throw new NotFoundException(); 
-        return await this._vehiclesService.addRelations(vehicleToUpdate, {...relations});
+        return this._vehiclesService.addRelations(vehicleToUpdate, {...relations});
     }
 
     @Delete('remove-relations/:id')
     async removeRelations(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe) relations: VehicleRelations) {
         const vehicleToUpdate = await this._vehiclesService.findOne(id);
         if (!vehicleToUpdate) throw new NotFoundException();
-        return await this._vehiclesService.removeRelations(vehicleToUpdate, {...relations});
+        return this._vehiclesService.removeRelations(vehicleToUpdate, {...relations});
     }
 }

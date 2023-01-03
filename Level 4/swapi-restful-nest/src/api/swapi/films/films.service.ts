@@ -14,12 +14,12 @@ export class FilmsService {
         private _repoWrapper: RepositoryWrapper
     ) {}
 
-    async findByPage(page: number, count: number): Promise<PaginationResult<Film>> {
-        return await this._repoWrapper.films.findByPage(page, count);
+    findByPage(page: number, count: number): Promise<PaginationResult<Film>> {
+        return this._repoWrapper.films.findByPage(page, count);
     }
 
-    async findOne(id: number) {
-        const film = await this._repoWrapper.films.findOne({
+    findOne(id: number): Promise<Film> {
+        const film = this._repoWrapper.films.findOne({
             where: { id },
             relations: {
                 characters: true,
@@ -35,35 +35,45 @@ export class FilmsService {
         return film;
     }
 
-    async create(film: Film, images: Express.Multer.File[]) {
-        film.publicImages = await this._imagesService.createPublicImages(images);
-        film.fileImages = await this._imagesService.createFileImages(images);
-        return await this._repoWrapper.films.create(film);
+    async create(film: Film, images: Express.Multer.File[]): Promise<Film> {
+        const [publicImages, fileImages] = await Promise.all([
+            this._imagesService.createPublicImages(images),
+            this._imagesService.createFileImages(images)
+        ]);
+        film.publicImages = publicImages;
+        film.fileImages = fileImages;
+        return this._repoWrapper.films.create(film);
     }
 
-    async update(id: number, film: Film) {
-        return await this._repoWrapper.films.update(id, film);
+    update(id: number, film: Film): Promise<Film> {
+        return this._repoWrapper.films.update(id, film);
     }
 
-    async remove(entity: Film) {
-        await this._imagesService.deletePublicImages(entity.publicImages);
-        await this._imagesService.deleteFileImages(entity.fileImages);
-        return await this._repoWrapper.films.remove(entity);
+    async remove(film: Film): Promise<Film> {
+        await Promise.all([
+            this._imagesService.deletePublicImages(film.publicImages),
+            this._imagesService.deleteFileImages(film.fileImages)
+        ]);
+        return this._repoWrapper.films.remove(film);
     }
 
-    async addImages(film: Film, images: Express.Multer.File[]) {
-        film.publicImages.push(...await this._imagesService.createPublicImages(images));
-        film.fileImages.push(...await this._imagesService.createFileImages(images));
-        return await this._repoWrapper.films.save(film);
+    async addImages(film: Film, images: Express.Multer.File[]): Promise<Film> {
+        const [publicImages, fileImages] = await Promise.all([
+            this._imagesService.createPublicImages(images),
+            this._imagesService.createFileImages(images)
+        ]);
+        film.publicImages.push(...publicImages);
+        film.fileImages.push(...fileImages);
+        return this._repoWrapper.films.save(film);
     }
 
-    async addRelations(film: Film, relations: FilmRelations) {
+    async addRelations(film: Film, relations: FilmRelations): Promise<Film> {
         const updatedFilm = await this._relationsService.addRelations(film, {...relations});
-        return await this._repoWrapper.films.save(updatedFilm);
+        return this._repoWrapper.films.save(updatedFilm);
     }
 
-    async removeRelations(film: Film, relations: FilmRelations) {
+    async removeRelations(film: Film, relations: FilmRelations): Promise<Film> {
         const updatedFilm = await this._relationsService.removeRelations(film, {...relations});
-        return await this._repoWrapper.films.save(updatedFilm);
+        return this._repoWrapper.films.save(updatedFilm);
     }
 }

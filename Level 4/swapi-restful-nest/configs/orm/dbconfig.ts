@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm";
 import { MysqlConnectionOptions } from "typeorm/driver/mysql/MysqlConnectionOptions";
-import { ormConfig } from "./ormconfig";
+import { ormConfig } from "../ormconfig";
 
 export const dbConfig: MysqlConnectionOptions = {
     ...ormConfig,

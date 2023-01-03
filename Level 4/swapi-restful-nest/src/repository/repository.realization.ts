@@ -10,8 +10,8 @@ export class BaseRepository<T extends EntityInterface> implements RepositoryInte
         this._repository = ds.getRepository(entity);
     }
 
-    async find(options: FindManyOptions<T>) {
-        return await this._repository.find(options);
+    find(options: FindManyOptions<T>): Promise<T[]> {
+        return this._repository.find(options);
     }
     
     async findByPage(page: number, count: number): Promise<PaginationResult<T>> {
@@ -26,35 +26,35 @@ export class BaseRepository<T extends EntityInterface> implements RepositoryInte
         }
     }
 
-    async findOne(options: FindOneOptions<T>): Promise<T> {
-        return await this._repository.findOne(options);
+    findOne(options: FindOneOptions<T>): Promise<T> {
+        return this._repository.findOne(options);
     }
     
-    async create(entity: T): Promise<T> {
-        return await this._repository.save(entity);
+    create(entity: T): Promise<T> {
+        return this._repository.save(entity);
     }
     
-    async createMany(entities: T[]): Promise<T[]> {
-        return await this._repository.save(entities);
+    createMany(entities: T[]): Promise<T[]> {
+        return this._repository.save(entities);
     }
 
-    async update(id: number, entity: T): Promise<T> {
-        return await this._repository.save({...entity, id});
+    update(id: number, entity: T): Promise<T> {
+        return this._repository.save({...entity, id});
     }
     
-    async updateMany(entities: T[]): Promise<T[]> {
-        return await this._repository.save(entities);
+    updateMany(entities: T[]): Promise<T[]> {
+        return this._repository.save(entities);
     }
 
-    async remove(entityToRemove: T): Promise<T> {
-        return await this._repository.remove(entityToRemove);
+    remove(entityToRemove: T): Promise<T> {
+        return this._repository.remove(entityToRemove);
     }
 
-    async removeMany(entitiesToRemove: T[]): Promise<T[]> {
-        return await this._repository.remove(entitiesToRemove);
+    removeMany(entitiesToRemove: T[]): Promise<T[]> {
+        return this._repository.remove(entitiesToRemove);
     }
 
-    async save(entity: T): Promise<T> {
-        return await this._repository.save(entity);
+    save(entity: T): Promise<T> {
+        return this._repository.save(entity);
     }
 }

@@ -65,15 +65,6 @@ export class SwapiSeederService implements SeederInterface {
         this._logger.log('Seeding swapi entities has been finished successfully!');
     }
 
-    async truncate(queryRunner: QueryRunner) {
-        this._logger.log('Truncating swapi entities has been started');
-
-        await this.truncateTables(queryRunner);
-        await this.deleteAllImages();
-
-        this._logger.log('Truncating swapi entities has been finished successfully!');
-    }
-
     private async seedEntities(entityName: string, entityType: ModelIdentifier<EntityInterface>, dtoType: ModelIdentifier) {
         this._logger.log(`Seeding started: [${entityName}]`);
         const addedResults: Promise<EntityInterface[]>[] = [];
@@ -103,7 +94,7 @@ export class SwapiSeederService implements SeederInterface {
             page.results.map(result => {
                 const swapiEntity = _.mapKeys(result, (value, key) => _.camelCase(key)) as SwapiEntity;
                 const relationObject: {[key: string]: number[] | number} = {};
-                for(const entityName of this.entityNames) {
+                for (const entityName of this.entityNames) {
                     if (swapiEntity.hasOwnProperty(entityName) && swapiEntity[entityName]) {
                         if (typeof swapiEntity[entityName] === 'object') {
                             relationObject[entityName] = (swapiEntity[entityName] as string[]).map(url => this.getIdFromUrl(url));
@@ -133,6 +124,17 @@ export class SwapiSeederService implements SeederInterface {
         return +url.match(/(?<=\/)\d+(?=\/)/gm)[0];
     }
 
+    // example how I was reverting seeded data (also deleting all images)
+    // so I don't use this method also like internal
+    async truncate(queryRunner: QueryRunner) {
+        this._logger.log('Truncating swapi entities has been started');
+
+        await this.truncateTables(queryRunner);
+        await this.deleteAllImages();
+
+        this._logger.log('Truncating swapi entities has been finished successfully!');
+    }
+
     private async truncateTables(queryRunner: QueryRunner) {
         this._logger.log("Truncating tables started");
         await queryRunner.query('SET FOREIGN_KEY_CHECKS = 0');
@@ -156,10 +158,14 @@ export class SwapiSeederService implements SeederInterface {
 
     private async deleteAllImages() {
         this._logger.log("Deleting images started");
-        const publicImages = await this._repoWrapper.publicImages.find({});
-        const fileImages = await this._repoWrapper.fileImages.find({});
-        await this._imagesService.deletePublicImages(publicImages);
-        await this._imagesService.deleteFileImages(fileImages);
+        const [publicImages, fileImages] = await Promise.all([
+            this._repoWrapper.publicImages.find({}),
+            this._repoWrapper.fileImages.find({})
+        ]);
+        await Promise.all([
+            this._imagesService.deletePublicImages(publicImages),
+            this._imagesService.deleteFileImages(fileImages)
+        ]);
         this._logger.log("Deleting images finished");
     }
 }

@@ -18,9 +18,9 @@ import { LocalRegisterStrategy } from './strategies/local-register.strategy';
             inject: [ConfigService],
             useFactory: (configService: ConfigService) => {
                 const jwtModuleOptions: JwtModuleOptions = {
-                    secret: configService.get('JWT_SECRET'),
+                    secret: configService.get('jwt.secret'),
                     signOptions: {
-                        expiresIn: configService.get('JWT_EXPIRES_IN')
+                        expiresIn: configService.get('jwt.expiresIn')
                     }
                 }
                 return jwtModuleOptions;
@@ -28,8 +28,7 @@ import { LocalRegisterStrategy } from './strategies/local-register.strategy';
         }),
         PassportModule, 
         UsersModule,
-        RolesModule,
-        ConfigModule
+        RolesModule
     ],
     providers: [
         AuthService, 

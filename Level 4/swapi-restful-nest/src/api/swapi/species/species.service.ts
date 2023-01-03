@@ -14,12 +14,12 @@ export class SpeciesService {
         private _repoWrapper: RepositoryWrapper
     ) {}
 
-    async findByPage(page: number, count: number): Promise<PaginationResult<Species>> {
-        return await this._repoWrapper.species.findByPage(page, count);
+    findByPage(page: number, count: number): Promise<PaginationResult<Species>> {
+        return this._repoWrapper.species.findByPage(page, count);
     }
 
-    async findOne(id: number) {
-        const species = await this._repoWrapper.species.findOne({
+    findOne(id: number): Promise<Species> {
+        const species = this._repoWrapper.species.findOne({
             where: { id },
             relations: {
                 homeworld: true,
@@ -33,35 +33,45 @@ export class SpeciesService {
         return species;
     }
 
-    async create(species: Species, images: Express.Multer.File[]) {
-        species.publicImages = await this._imagesService.createPublicImages(images);
-        species.fileImages = await this._imagesService.createFileImages(images);
-        return await this._repoWrapper.species.create(species);
+    async create(species: Species, images: Express.Multer.File[]): Promise<Species> {
+        const [publicImages, fileImages] = await Promise.all([
+            this._imagesService.createPublicImages(images),
+            this._imagesService.createFileImages(images)
+        ]);
+        species.publicImages = publicImages;
+        species.fileImages = fileImages
+        return this._repoWrapper.species.create(species);
     }
 
-    async update(id: number, species: Species) {
-        return await this._repoWrapper.species.update(id, species);
+    update(id: number, species: Species): Promise<Species> {
+        return this._repoWrapper.species.update(id, species);
     }
 
-    async remove(entity: Species) {
-        await this._imagesService.deletePublicImages(entity.publicImages);
-        await this._imagesService.deleteFileImages(entity.fileImages);
-        return await this._repoWrapper.species.remove(entity);
+    async remove(species: Species): Promise<Species> {
+        await Promise.all([
+            this._imagesService.deletePublicImages(species.publicImages),
+            this._imagesService.deleteFileImages(species.fileImages)
+        ]);
+        return this._repoWrapper.species.remove(species);
     }
 
-    async addImages(species: Species, images: Express.Multer.File[]) {
-        species.publicImages.push(...await this._imagesService.createPublicImages(images));
-        species.fileImages.push(...await this._imagesService.createFileImages(images));
-        return await this._repoWrapper.species.save(species);
+    async addImages(species: Species, images: Express.Multer.File[]): Promise<Species> {
+        const [publicImages, fileImages] = await Promise.all([
+            this._imagesService.createPublicImages(images),
+            this._imagesService.createFileImages(images)
+        ]);
+        species.publicImages.push(...publicImages);
+        species.fileImages.push(...fileImages);
+        return this._repoWrapper.species.save(species);
     }
 
-    async addRelations(species: Species, relations: SpeciesRelations) {
+    async addRelations(species: Species, relations: SpeciesRelations): Promise<Species> {
         const updatedSpecies = await this._relationsService.addRelations(species, {...relations});
-        return await this._repoWrapper.species.save(updatedSpecies);
+        return this._repoWrapper.species.save(updatedSpecies);
     }
 
-    async removeRelations(species: Species, relations: SpeciesRelations) {
+    async removeRelations(species: Species, relations: SpeciesRelations): Promise<Species> {
         const updatedSpecies = await this._relationsService.removeRelations(species, {...relations});
-        return await this._repoWrapper.species.save(updatedSpecies);
+        return this._repoWrapper.species.save(updatedSpecies);
     }
 }
