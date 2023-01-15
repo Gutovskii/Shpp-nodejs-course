@@ -2,8 +2,6 @@ export enum CommonEnum {
     MIDDLEWARE_PAGINATION_FIRST_PAGE = '1',
     MIDDLEWARE_PAGINATION_INITIAL_COUNT = '3',
 
-    INJECT_DATA_SOURCE = 'DATA_SOURCE',
-
     FILES_PUBLIC_PATH = 'src/public',
     FILES_IMAGES_PATH = 'src/public/images',
 

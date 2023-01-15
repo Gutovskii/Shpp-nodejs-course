@@ -18,13 +18,13 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "npx typeorm-ts-node-esm -d configs/orm/dbconfig.ts",
+    "test:e2e": "jest --config ./test/jest-e2e.json --watch",
+    "typeorm": "cross-env NODE_ENV=migration ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d configs/ormconfig.ts",
     "migration:generate": "npm run typeorm migration:generate",
     "migration:run": "npm run typeorm migration:run",
     "migration:revert": "npm run typeorm migration:revert",
-    "seed:config": "ts-node -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js config -n configs/ormconfig.ts",
-    "seed:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js seed -n configs/ormconfig.ts"
+    "seed:config": "cross-env NODE_ENV=seed ts-node -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js config -n configs/ormconfig.ts",
+    "seed:run": "cross-env NODE_ENV=seed ts-node -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js seed -n configs/ormconfig.ts"
   },
   "dependencies": {
     "@automapper/classes": "^8.7.6",
@@ -103,6 +103,9 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "src/(.*)": "<rootDir>/$1"
+    }
   }
 }

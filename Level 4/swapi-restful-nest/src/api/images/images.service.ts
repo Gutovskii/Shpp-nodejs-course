@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs/promises';
 import * as path from 'path';
@@ -12,18 +12,17 @@ import { In } from 'typeorm';
 
 @Injectable()
 export class ImagesService {
-    private readonly s3 = new S3();
-
     constructor(
         private _repoWrapper: RepositoryWrapper,
-        private _configService: ConfigService
+        private _configService: ConfigService,
+        private _s3: S3
     ) {}
 
     async createPublicImages(images: Express.Multer.File[]): Promise<PublicImage[]> {
         if (!images) return [];
         
         const uploadedResultsPromises = images.map(publicImage =>
-            this.s3.upload({
+            this._s3.upload({
                 Bucket: this._configService.get('aws.publicBucketName'),
                 Body: publicImage.buffer,
                 Key: `${uuid.v4() + path.extname(publicImage.originalname)}`
@@ -43,7 +42,7 @@ export class ImagesService {
 
     async deletePublicImages(images: PublicImage[]): Promise<void> {
         const deletedResultsPromises = images.map(publicImage => 
-            this.s3.deleteObject({
+            this._s3.deleteObject({
                 Bucket: this._configService.get('aws.publicBucketName'),
                 Key: publicImage.key
             }).promise()
@@ -83,6 +82,9 @@ export class ImagesService {
             this._repoWrapper.publicImages.find({where: {id: In(ids)}}),
             this._repoWrapper.fileImages.find({where: {id: In(ids)}})
         ]);
+        if (!(publicImagesToDelete.length && fileImagesToDelete.length)) {
+            throw new NotFoundException('Nothing deleted');
+        }
         await this.deletePublicImages(publicImagesToDelete);
         await this.deleteFileImages(fileImagesToDelete);
     }

@@ -37,7 +37,7 @@ export class Film implements EntityInterface {
 
     @AutoMap()
     @Column({name: 'release_date'})
-    releaseDate: number
+    releaseDate: string
 
     @ManyToMany(() => Person, character => character.films, {eager: true})
     @JoinTable({joinColumn: {name: 'film_id'}, inverseJoinColumn: {name: 'character_id'}})

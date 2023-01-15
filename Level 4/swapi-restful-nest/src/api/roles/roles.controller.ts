@@ -1,6 +1,6 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Body, Controller, Delete, Get, Param, Post, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Controller, Delete, Get, Param, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { RolesAccess } from '../auth/decorators/auth.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -13,7 +13,6 @@ import { RolesService } from './roles.service';
 @UseGuards(JwtAuthGuard)
 export class RolesController {
     constructor(
-        @InjectMapper() private _mapper: Mapper,
         private _rolesService: RolesService
     ) {}
     
@@ -23,7 +22,7 @@ export class RolesController {
     }
 
     @Delete(':roleName')
-    async deleteRole(@Param('roleName') roleName: Roles) {
+    async deleteRole(@Param('roleName') roleName: string) {
         return this._rolesService.delete(roleName);
     }
 }

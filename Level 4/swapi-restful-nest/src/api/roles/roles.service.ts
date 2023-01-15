@@ -16,9 +16,9 @@ export class RolesService {
         return this._repoWrapper.roles.find({});
     }
 
-    async findByName(roleName: string): Promise<Role> {
+    async findByName(roleName: string, ignoreExistance = false): Promise<Role> {
         const role = await this._repoWrapper.roles.findOne({where: {name: roleName}});
-        if (!role) throw new NotFoundException(`Role '${role.name}' is not found`);
+        if (!role && !ignoreExistance) throw new NotFoundException(`Role '${roleName}' is not found`);
         return role;
     }
 
@@ -32,13 +32,13 @@ export class RolesService {
         return this._repoWrapper.roles.create(role);
     }
 
-    async delete(roleName: Roles): Promise<Role> {
-        if (roleName === Roles.USER || roleName === Roles.ADMIN)
+    async delete(roleName: string): Promise<Role> {
+        if (roleName === Roles.USER || roleName === Roles.ADMIN) {
             throw new BadRequestException('Roles USER or ADMIN can\'t be deleted');
-
+        }
         const roleToDelete = await this.findByName(roleName);
         const userRole = await this.findByName(Roles.USER);
-        const users = await this._usersService.findByRoles([roleToDelete.name]);
+        const users = await this._usersService.findByRoles([roleName]);
         users.map(user => {
             if (user.roles.length === 1) user.roles.push(userRole);
         });

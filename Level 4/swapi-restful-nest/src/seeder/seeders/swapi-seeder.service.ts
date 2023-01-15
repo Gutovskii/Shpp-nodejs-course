@@ -1,8 +1,7 @@
 import { Mapper, ModelIdentifier } from "@automapper/core";
 import { InjectMapper } from "@automapper/nestjs";
 import { Injectable, Logger } from "@nestjs/common";
-import { InjectEntityManager } from "@nestjs/typeorm";
-import { EntityManager, QueryRunner } from "typeorm";
+import { QueryRunner } from "typeorm";
 import * as _ from "lodash";
 import { axiosInstance } from "configs/axiosconfig";
 import { ImagesService } from "src/api/images/images.service";
@@ -42,7 +41,6 @@ export class SwapiSeederService implements SeederInterface {
         private _repoWrapper: RepositoryWrapper,
         private _imagesService: ImagesService,
         @InjectMapper() private _mapper: Mapper,
-        @InjectEntityManager() private _entityManager: EntityManager
     ) {}
 
     async seed() {

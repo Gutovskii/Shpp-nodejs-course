@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
-import { dbConfig } from 'configs/orm/dbconfig';
+import { ormConfig } from 'configs/ormconfig';
 import { SwapiModule } from './api/swapi/swapi.module';
 import { AuthModule } from './api/auth/auth.module';
 import { UsersModule } from './api/users/users.module';
@@ -44,7 +44,7 @@ import { getConfig } from './common/config';
     AutomapperModule.forRoot({
       strategyInitializer: classes()
     }),
-    TypeOrmModule.forRoot(dbConfig),
+    TypeOrmModule.forRoot(ormConfig),
     SwapiModule,
     ImagesModule,
     RepositoryModule,

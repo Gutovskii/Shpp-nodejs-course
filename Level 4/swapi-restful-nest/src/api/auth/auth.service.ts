@@ -35,7 +35,7 @@ export class AuthService {
         const newUser = new User();
         newUser.username = username;
         newUser.hashPassword = await bcrypt.hash(password, SALT_ROUNDS);
-        const userRoles = await this._rolesService.findByNames(Roles.USER); // Chnage to Roles.ADMIN if you want to create the admin ;)
+        const userRoles = await this._rolesService.findByNames(Roles.USER); // Change to Roles.ADMIN if you want to create the admin ;)
         newUser.roles = userRoles;
 
         await this._repoWrapper.users.create(newUser);
