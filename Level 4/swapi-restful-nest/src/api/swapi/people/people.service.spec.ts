@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { FileImage } from 'src/api/images/entities/file-image.entity';
 import { PublicImage } from 'src/api/images/entities/public-image.entity';
 import { ImagesService } from 'src/api/images/images.service';
-import { PaginationResult } from 'src/common/interfaces/pagination.interface';
+import { PaginationResult } from 'src/common/classes/pagination.class';
 import { RelationsService } from 'src/relations/relations.service';
 import { RepositoryWrapper } from 'src/repository/repository.wrapper';
 import { PeopleService } from './people.service';
@@ -26,10 +26,7 @@ describe('PeopleService', () => {
   const mockRepoWrapper = {
     people: {
       findByPage: jest.fn().mockImplementation((page, count) => Promise.resolve(getFakePeopleByPage(page, count))),
-      findOne: jest.fn().mockImplementation(({
-        where: { id },
-        relations: {}
-      }) => Promise.resolve(getFakePersonWithId(id))),
+      findOne: jest.fn().mockImplementation(({where: { id }}) => Promise.resolve(getFakePersonWithId(id))),
       create: jest.fn().mockImplementation(person => Promise.resolve(person)),
       update: jest.fn().mockImplementation((id, person) => Promise.resolve({...person, id})),
       remove: jest.fn().mockImplementation(person => Promise.resolve(person)),
@@ -55,12 +52,6 @@ describe('PeopleService', () => {
         }
       ],
     })
-    // .overrideProvider(ImagesService)
-    // .useValue(mockImagesService)
-    // .overrideProvider(RelationsService)
-    // .useValue(mockRelationsService)
-    // .overrideProvider(RepositoryWrapper)
-    // .useValue(mockRepoWrapper)
     .compile();
 
     service = module.get<PeopleService>(PeopleService);
@@ -84,6 +75,13 @@ describe('PeopleService', () => {
     expect(await service.findOne(id)).toEqual(getFakePersonWithId(id));
     expect(mockRepoWrapper.people.findOne).toBeCalledTimes(1);
   })
+
+  it('should check if a person exists', async () => {
+    const id = 1;
+
+    expect(await service.exists(id)).toEqual(true);
+    expect(mockRepoWrapper.people.findOne).toBeCalledTimes(2);
+  });
 
   it('should create a person', async () => {
     const person = new Person();

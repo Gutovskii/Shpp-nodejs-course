@@ -1,6 +1,6 @@
 import { DataSource, EntityTarget, FindManyOptions, FindOneOptions, Repository } from "typeorm";
 import { EntityInterface } from "src/common/interfaces/entity.interface";
-import { PaginationResult } from "src/common/interfaces/pagination.interface";
+import { PaginationResult } from "src/common/classes/pagination.class";
 import { RepositoryInterface } from "./repository.interface";
 
 export class BaseRepository<T extends EntityInterface> implements RepositoryInterface<T> {

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PaginationResult } from 'src/common/interfaces/pagination.interface';
+import { PaginationResult } from 'src/common/classes/pagination.class';
 import { ImagesService } from 'src/api/images/images.service';
 import { RelationsService } from 'src/relations/relations.service';
 import { RepositoryWrapper } from 'src/repository/repository.wrapper';
@@ -18,10 +18,10 @@ export class PeopleService {
         return this._repoWrapper.people.findByPage(page, count);
     }
 
-    findOne(id: number): Promise<Person> {
+    findOne(id: number, missRelations?: boolean): Promise<Person> {
         const person = this._repoWrapper.people.findOne({
             where: { id },
-            relations: {
+            relations: missRelations ? {} : {
                 films: true,
                 homeworld: true,
                 starships: true,
@@ -33,6 +33,14 @@ export class PeopleService {
             loadEagerRelations: false
         });
         return person;
+    }
+
+    async exists(id: number): Promise<boolean> {
+        const person = await this._repoWrapper.people.findOne({
+            where: { id },
+            select: ['id']
+        });
+        return !!person;
     }
 
     async create(person: Person, images: Express.Multer.File[]): Promise<Person> {

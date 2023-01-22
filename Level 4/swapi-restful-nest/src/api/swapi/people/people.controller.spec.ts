@@ -2,7 +2,7 @@ import { getMapperToken } from '@automapper/nestjs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { FileImage } from 'src/api/images/entities/file-image.entity';
 import { PublicImage } from 'src/api/images/entities/public-image.entity';
-import { PaginationResult } from 'src/common/interfaces/pagination.interface';
+import { PaginationResult } from 'src/common/classes/pagination.class';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
 import { PeopleController } from './people.controller';
@@ -15,6 +15,7 @@ describe('PeopleController', () => {
   const mockPeopleService = {
     findByPage: jest.fn().mockImplementation((page, count) => Promise.resolve(getFakePeopleByPage(page, count))),
     findOne: jest.fn().mockImplementation(id => Promise.resolve(getFakePersonWithId(id))),
+    exists: jest.fn().mockImplementation(id => Promise.resolve(true)),
     create: jest.fn().mockImplementation((person, images) => ({
       ...person,
       publicImages: getFakePublicImages(),
@@ -110,21 +111,20 @@ describe('PeopleController', () => {
     const id = 1;
 
     expect(await controller.removePerson(id)).toEqual(getFakePersonWithId(id));
-    expect(mockPeopleService.findOne).toBeCalledTimes(3);
+    expect(mockPeopleService.findOne).toBeCalledTimes(2);
     expect(mockPeopleService.remove).toBeCalledTimes(1);
   });
 
   it('should add images to a person', async () => {
     const id = 1;
-    const addImagesDto = { images: getFakeFiles() };
 
-    expect(await controller.addImages(id, getFakeFiles(), addImagesDto)).toEqual({
+    expect(await controller.addImages(id, getFakeFiles())).toEqual({
       ...getFakePersonWithId(id),
       publicImages: getFakePersonWithId(id).publicImages.concat(getFakePublicImages()),
       fileImages: getFakePersonWithId(id).fileImages.concat(getFakeFileImages())
     });
     expect(mockPeopleService.addImages).toBeCalledTimes(1);
-    expect(mockPeopleService.findOne).toBeCalledTimes(4);
+    expect(mockPeopleService.findOne).toBeCalledTimes(3);
   });
 
   it('should add relations to a person', async () => {
@@ -135,7 +135,7 @@ describe('PeopleController', () => {
     }
 
     expect(await controller.addRelations(id, relations)).toEqual(getFakePersonWithId(id));
-    expect(mockPeopleService.findOne).toBeCalledTimes(5);
+    expect(mockPeopleService.findOne).toBeCalledTimes(4);
     expect(mockPeopleService.addRelations).toBeCalledTimes(1);
   });
 
@@ -147,7 +147,7 @@ describe('PeopleController', () => {
     }
 
     expect(await controller.removeRelations(id, relations)).toEqual(getFakePersonWithId(id));
-    expect(mockPeopleService.findOne).toBeCalledTimes(6);
+    expect(mockPeopleService.findOne).toBeCalledTimes(5);
     expect(mockPeopleService.removeRelations).toBeCalledTimes(1);
   });
 });

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PaginationResult } from 'src/common/interfaces/pagination.interface';
+import { PaginationResult } from 'src/common/classes/pagination.class';
 import { Role } from '../roles/role.entity';
 import { Roles } from '../roles/roles.enum';
 import { User } from './user.entity';

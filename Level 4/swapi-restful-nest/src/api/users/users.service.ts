@@ -2,7 +2,7 @@ import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException 
 import { In } from "typeorm";
 import { RepositoryWrapper } from "src/repository/repository.wrapper";
 import { RolesService } from "../roles/roles.service";
-import { PaginationResult } from "src/common/interfaces/pagination.interface";
+import { PaginationResult } from "src/common/classes/pagination.class";
 import { User } from "./user.entity";
 import { Role } from "../roles/role.entity";
 import { Roles } from "../roles/roles.enum";

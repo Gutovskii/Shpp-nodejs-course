@@ -13,10 +13,10 @@ import { ImagesModule } from './api/images/images.module';
 import { RepositoryModule } from './repository/repository.module';
 import { RelationsModule } from './relations/relations.module';
 import { SeederModule } from './seeder/seeder.module';
-import { CommonEnum } from './common/common.enum';
 import { PaginationMiddleware } from './common/middleware/pagination.middleware';
 import * as Joi from 'joi';
 import { getConfig } from './common/config';
+import { FILES_PUBLIC_PATH } from './api/images/images.service';
 
 @Module({
   imports: [
@@ -39,7 +39,7 @@ import { getConfig } from './common/config';
       })
     }),
     ServeStaticModule.forRoot({
-      rootPath: CommonEnum.FILES_PUBLIC_PATH
+      rootPath: FILES_PUBLIC_PATH
     }),
     AutomapperModule.forRoot({
       strategyInitializer: classes()

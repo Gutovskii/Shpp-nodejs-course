@@ -4,11 +4,14 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as uuid from 'uuid';
 import { S3 } from 'aws-sdk';
-import { CommonEnum } from 'src/common/common.enum';
 import { RepositoryWrapper } from 'src/repository/repository.wrapper';
 import { PublicImage } from './entities/public-image.entity';
 import { FileImage } from './entities/file-image.entity';
 import { In } from 'typeorm';
+import { config } from 'src/common/config';
+
+export const FILES_PUBLIC_PATH = 'src/public';
+export const FILES_IMAGES_PATH = 'src/public/images';
 
 @Injectable()
 export class ImagesService {
@@ -20,10 +23,10 @@ export class ImagesService {
 
     async createPublicImages(images: Express.Multer.File[]): Promise<PublicImage[]> {
         if (!images) return [];
-        
-        const uploadedResultsPromises = images.map(publicImage =>
+
+        const uploadedResultsPromises = images.map(async publicImage =>
             this._s3.upload({
-                Bucket: this._configService.get('aws.publicBucketName'),
+                Bucket: this._configService.get<typeof config.aws.publicBucketName>('aws.publicBucketName'),
                 Body: publicImage.buffer,
                 Key: `${uuid.v4() + path.extname(publicImage.originalname)}`
             }).promise()
@@ -43,7 +46,7 @@ export class ImagesService {
     async deletePublicImages(images: PublicImage[]): Promise<void> {
         const deletedResultsPromises = images.map(publicImage => 
             this._s3.deleteObject({
-                Bucket: this._configService.get('aws.publicBucketName'),
+                Bucket: this._configService.get<typeof config.aws.publicBucketName>('aws.publicBucketName'),
                 Key: publicImage.key
             }).promise()
         );
@@ -54,7 +57,7 @@ export class ImagesService {
     async createFileImages(images: Express.Multer.File[]): Promise<FileImage[]> {
         if (!images) return [];
 
-        await fs.mkdir(CommonEnum.FILES_IMAGES_PATH, {recursive: true});
+        await fs.mkdir(FILES_IMAGES_PATH, {recursive: true});
 
         const fileImagesToCreate: FileImage[] = [];
         const createFilesPromises = images.map(image => {
@@ -62,7 +65,7 @@ export class ImagesService {
             const fileImage = new FileImage();
             fileImage.fileName = fileName;
             fileImagesToCreate.push(fileImage);
-            return fs.writeFile(path.join(CommonEnum.FILES_IMAGES_PATH, fileName), image.buffer);
+            return fs.writeFile(path.join(FILES_IMAGES_PATH, fileName), image.buffer);
         });
         await Promise.all(createFilesPromises);
 
@@ -71,7 +74,7 @@ export class ImagesService {
 
     async deleteFileImages(images: FileImage[]): Promise<void> {
         const deleteFilesPromises = images.map(image => 
-            fs.unlink(path.join(CommonEnum.FILES_IMAGES_PATH, image.fileName))
+            fs.unlink(path.join(FILES_IMAGES_PATH, image.fileName))
         );
         await Promise.all(deleteFilesPromises);
         await this._repoWrapper.fileImages.removeMany(images);

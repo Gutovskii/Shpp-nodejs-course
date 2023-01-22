@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PaginationResult } from 'src/common/interfaces/pagination.interface';
+import { PaginationResult } from 'src/common/classes/pagination.class';
 import { ImagesService } from 'src/api/images/images.service';
 import { RelationsService } from 'src/relations/relations.service';
 import { RepositoryWrapper } from 'src/repository/repository.wrapper';
@@ -30,6 +30,14 @@ export class StarshipsService {
             loadEagerRelations: false
         });
         return starship;
+    }
+
+    async exists(id: number): Promise<boolean> {
+        const starship = await this._repoWrapper.starships.findOne({
+            where: { id },
+            select: ['id']
+        });
+        return !!starship;
     }
 
     async create(starship: Starship, images: Express.Multer.File[]): Promise<Starship> {

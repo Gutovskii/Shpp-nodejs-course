@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PaginationResult } from 'src/common/interfaces/pagination.interface';
+import { PaginationResult } from 'src/common/classes/pagination.class';
 import { ImagesService } from 'src/api/images/images.service';
 import { RelationsService } from 'src/relations/relations.service';
 import { RepositoryWrapper } from 'src/repository/repository.wrapper';
@@ -31,6 +31,14 @@ export class SpeciesService {
             loadEagerRelations: false
         });
         return species;
+    }
+
+    async exists(id: number): Promise<boolean> {
+        const species = await this._repoWrapper.species.findOne({
+            where: { id },
+            select: ['id']
+        });
+        return !!species;
     }
 
     async create(species: Species, images: Express.Multer.File[]): Promise<Species> {

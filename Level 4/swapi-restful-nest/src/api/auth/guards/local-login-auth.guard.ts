@@ -1,4 +1,4 @@
 import { AuthGuard } from "@nestjs/passport";
-import { CommonEnum } from "src/common/common.enum";
+import { STRATEGY_LOCAL_LOGIN } from "../strategies/local-login.strategy";
 
-export class LocalLoginAuthGuard extends AuthGuard(CommonEnum.STRATEGY_LOCAL_LOGIN) {}
+export class LocalLoginAuthGuard extends AuthGuard(STRATEGY_LOCAL_LOGIN) {}

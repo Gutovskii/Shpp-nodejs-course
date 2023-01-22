@@ -1,11 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-local";
-import { CommonEnum } from "src/common/common.enum";
 import { AuthService } from "../auth.service";
 
+export const STRATEGY_LOCAL_REGISTER = 'local-register';
+
 @Injectable()
-export class LocalRegisterStrategy extends PassportStrategy(Strategy, CommonEnum.STRATEGY_LOCAL_REGISTER) {
+export class LocalRegisterStrategy extends PassportStrategy(Strategy, STRATEGY_LOCAL_REGISTER) {
     constructor(
         private _authService: AuthService
     ) {

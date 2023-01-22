@@ -1,5 +1,3 @@
-import { EntityInterface } from "./entity.interface"
-
 export interface SwapiPageResponse {
     count: number;
     next?: string;

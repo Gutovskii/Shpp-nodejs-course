@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { config } from 'src/common/config';
 import { RolesModule } from '../roles/roles.module';
 import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.controller';
@@ -18,9 +19,9 @@ import { LocalRegisterStrategy } from './strategies/local-register.strategy';
             inject: [ConfigService],
             useFactory: (configService: ConfigService) => {
                 const jwtModuleOptions: JwtModuleOptions = {
-                    secret: configService.get('jwt.secret'),
+                    secret: configService.get<typeof config.jwt.secret>('jwt.secret'),
                     signOptions: {
-                        expiresIn: configService.get('jwt.expiresIn')
+                        expiresIn: configService.get<typeof config.jwt.expiresIn>('jwt.expiresIn')
                     }
                 }
                 return jwtModuleOptions;
