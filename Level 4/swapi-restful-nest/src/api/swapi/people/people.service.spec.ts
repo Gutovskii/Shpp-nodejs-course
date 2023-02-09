@@ -154,7 +154,9 @@ const getFakePeopleByPage = (page: number, count: number):
       mass: '62',
       eyeColor: 'brown',
       hairColor: 'brown',
-      skinColor: 'white'
+      skinColor: 'white',
+      created: new Date('1337'),
+      edited: new Date('1337')
     })),
     totalCount: count
   }
@@ -177,7 +179,9 @@ const getFakePersonWithId = (id: number): Person => {
     vehicles: [],
     species: [],
     publicImages: [],
-    fileImages: []
+    fileImages: [],
+    created: new Date('1337'),
+    edited: new Date('1337')
   }
 }
 

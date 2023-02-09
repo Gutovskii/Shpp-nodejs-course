@@ -99,7 +99,9 @@ const getFakePerson = (): Person => {
     vehicles: [],
     species: [],
     publicImages: [],
-    fileImages: []
+    fileImages: [],
+    created: new Date('1337'),
+    edited: new Date('1337')
   }
 }
 
@@ -118,7 +120,9 @@ const getFakeFilmWithId = (id: number): Film => {
     vehicles: [],
     species: [],
     publicImages: [],
-    fileImages: []
+    fileImages: [],
+    created: new Date('1337'),
+    edited: new Date('1337')
   }
 }
 
@@ -138,6 +142,8 @@ const getFakePlanetWithId = (id: number): Planet => {
     species: [],
     films: [],
     publicImages: [],
-    fileImages: []
+    fileImages: [],
+    created: new Date('1337'),
+    edited: new Date('1337')
   }
 }
