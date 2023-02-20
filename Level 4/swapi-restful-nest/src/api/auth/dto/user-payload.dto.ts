@@ -1,6 +1,6 @@
-import { Role } from "src/api/roles/role.entity"
+import { Role } from 'src/api/roles/role.entity';
 
 export class UserPayload {
-    username: string
-    roles: Role[]
+  username: string;
+  roles: Role[];
 }

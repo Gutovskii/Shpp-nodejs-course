@@ -8,80 +8,95 @@ import { Person } from './person.entity';
 
 @Injectable()
 export class PeopleService {
-    constructor(
-        private _imagesService: ImagesService,
-        private _relationsService: RelationsService,
-        private _repoWrapper: RepositoryWrapper
-    ) {}
-    
-    findByPage(page: number, count: number): Promise<PaginationResult<Person>> {
-        return this._repoWrapper.people.findByPage(page, count);
-    }
+  constructor(
+    private _imagesService: ImagesService,
+    private _relationsService: RelationsService,
+    private _repoWrapper: RepositoryWrapper,
+  ) {}
 
-    findOne(id: number, missRelations?: boolean): Promise<Person> {
-        const person = this._repoWrapper.people.findOne({
-            where: { id },
-            relations: missRelations ? {} : {
-                films: true,
-                homeworld: true,
-                starships: true,
-                vehicles: true,
-                species: true,
-                publicImages: true,
-                fileImages: true
-            },
-            loadEagerRelations: false
-        });
-        return person;
-    }
+  findByPage(page: number, count: number): Promise<PaginationResult<Person>> {
+    return this._repoWrapper.people.findByPage(page, count);
+  }
 
-    async exists(id: number): Promise<boolean> {
-        const person = await this._repoWrapper.people.findOne({
-            where: { id },
-            select: ['id']
-        });
-        return !!person;
-    }
+  findOne(id: number, missRelations?: boolean): Promise<Person> {
+    const person = this._repoWrapper.people.findOne({
+      where: { id },
+      relations: missRelations
+        ? {}
+        : {
+            films: true,
+            homeworld: true,
+            starships: true,
+            vehicles: true,
+            species: true,
+            publicImages: true,
+            fileImages: true,
+          },
+      loadEagerRelations: false,
+    });
+    return person;
+  }
 
-    async create(person: Person, images: Express.Multer.File[]): Promise<Person> {
-        const [publicImages, fileImages] = await Promise.all([
-            this._imagesService.createPublicImages(images),
-            this._imagesService.createFileImages(images)
-        ]);
-        person.publicImages = publicImages;
-        person.fileImages = fileImages;
-        return this._repoWrapper.people.create(person);
-    }
+  async exists(id: number): Promise<boolean> {
+    const person = await this._repoWrapper.people.findOne({
+      where: { id },
+      select: ['id'],
+    });
+    return !!person;
+  }
 
-    update(id: number, person: Person): Promise<Person> {
-        return this._repoWrapper.people.update(id, person);
-    }
+  async create(person: Person, images: Express.Multer.File[]): Promise<Person> {
+    const [publicImages, fileImages] = await Promise.all([
+      this._imagesService.createPublicImages(images),
+      this._imagesService.createFileImages(images),
+    ]);
+    person.publicImages = publicImages;
+    person.fileImages = fileImages;
+    return this._repoWrapper.people.create(person);
+  }
 
-    async remove(person: Person): Promise<Person> {
-        await Promise.all([
-            this._imagesService.deletePublicImages(person.publicImages),
-            this._imagesService.deleteFileImages(person.fileImages)
-        ]);
-        return this._repoWrapper.people.remove(person);
-    }
+  update(id: number, person: Person): Promise<Person> {
+    return this._repoWrapper.people.update(id, person);
+  }
 
-    async addImages(person: Person, images: Express.Multer.File[]): Promise<Person> {
-        const [publicImages, fileImages] = await Promise.all([
-            this._imagesService.createPublicImages(images),
-            this._imagesService.createFileImages(images)
-        ]);
-        person.publicImages.push(...publicImages);
-        person.fileImages.push(...fileImages);
-        return this._repoWrapper.people.save(person);
-    }
+  async remove(person: Person): Promise<Person> {
+    await Promise.all([
+      this._imagesService.deletePublicImages(person.publicImages),
+      this._imagesService.deleteFileImages(person.fileImages),
+    ]);
+    return this._repoWrapper.people.remove(person);
+  }
 
-    async addRelations(person: Person, relations: PersonRelations): Promise<Person> {
-        const updatedPerson = await this._relationsService.addRelations(person, {...relations});
-        return this._repoWrapper.people.save(updatedPerson);
-    }
+  async addImages(
+    person: Person,
+    images: Express.Multer.File[],
+  ): Promise<Person> {
+    const [publicImages, fileImages] = await Promise.all([
+      this._imagesService.createPublicImages(images),
+      this._imagesService.createFileImages(images),
+    ]);
+    person.publicImages.push(...publicImages);
+    person.fileImages.push(...fileImages);
+    return this._repoWrapper.people.save(person);
+  }
 
-    async removeRelations(person: Person, relations: PersonRelations): Promise<Person> {
-        const updatedPerson = await this._relationsService.removeRelations(person, {...relations});
-        return this._repoWrapper.people.save(updatedPerson);
-    }
+  async addRelations(
+    person: Person,
+    relations: PersonRelations,
+  ): Promise<Person> {
+    const updatedPerson = await this._relationsService.addRelations(person, {
+      ...relations,
+    });
+    return this._repoWrapper.people.save(updatedPerson);
+  }
+
+  async removeRelations(
+    person: Person,
+    relations: PersonRelations,
+  ): Promise<Person> {
+    const updatedPerson = await this._relationsService.removeRelations(person, {
+      ...relations,
+    });
+    return this._repoWrapper.people.save(updatedPerson);
+  }
 }

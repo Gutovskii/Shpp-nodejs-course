@@ -12,30 +12,31 @@ import { LocalLoginStrategy } from './strategies/local-login.strategy';
 import { LocalRegisterStrategy } from './strategies/local-register.strategy';
 
 @Module({
-    controllers: [AuthController],
-    imports: [
-        JwtModule.registerAsync({
-            imports: [ConfigModule],
-            inject: [ConfigService],
-            useFactory: (configService: ConfigService) => {
-                const jwtModuleOptions: JwtModuleOptions = {
-                    secret: configService.get<typeof config.jwt.secret>('jwt.secret'),
-                    signOptions: {
-                        expiresIn: configService.get<typeof config.jwt.expiresIn>('jwt.expiresIn')
-                    }
-                }
-                return jwtModuleOptions;
-            },
-        }),
-        PassportModule, 
-        UsersModule,
-        RolesModule
-    ],
-    providers: [
-        AuthService, 
-        LocalLoginStrategy, 
-        LocalRegisterStrategy, 
-        JwtStrategy
-    ]
+  controllers: [AuthController],
+  imports: [
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const jwtModuleOptions: JwtModuleOptions = {
+          secret: configService.get<typeof config.jwt.secret>('jwt.secret'),
+          signOptions: {
+            expiresIn:
+              configService.get<typeof config.jwt.expiresIn>('jwt.expiresIn'),
+          },
+        };
+        return jwtModuleOptions;
+      },
+    }),
+    PassportModule,
+    UsersModule,
+    RolesModule,
+  ],
+  providers: [
+    AuthService,
+    LocalLoginStrategy,
+    LocalRegisterStrategy,
+    JwtStrategy,
+  ],
 })
 export class AuthModule {}

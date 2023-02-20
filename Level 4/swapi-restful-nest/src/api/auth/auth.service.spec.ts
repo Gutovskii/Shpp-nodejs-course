@@ -1,6 +1,5 @@
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { compare } from 'bcryptjs';
 import { RepositoryWrapper } from 'src/repository/repository.wrapper';
 import { Role } from '../roles/role.entity';
 import { Roles } from '../roles/roles.enum';
@@ -15,9 +14,13 @@ jest.mock('bcryptjs', () => {
   return {
     __esModule: true,
     ...originalModule,
-    compare: jest.fn().mockImplementation((password, hashPassword) => Promise.resolve(true)),
-    hash: jest.fn().mockImplementation((password, salt) => Promise.resolve('hash'))
-  }
+    compare: jest
+      .fn()
+      .mockImplementation((password, hashPassword) => Promise.resolve(true)),
+    hash: jest
+      .fn()
+      .mockImplementation((password, salt) => Promise.resolve('hash')),
+  };
 });
 
 describe('AuthService', () => {
@@ -25,23 +28,35 @@ describe('AuthService', () => {
 
   const mockRepoWrapper = {
     users: {
-      create: jest.fn().mockImplementation(user => Promise.resolve(getFakeUserWithName(user.username)))
-    }
-  }
+      create: jest
+        .fn()
+        .mockImplementation((user) =>
+          Promise.resolve(getFakeUserWithName(user.username)),
+        ),
+    },
+  };
 
   const mockUsersService = {
     findByName: jest.fn().mockImplementation((username, ignoreExistance) => {
-      return ignoreExistance ? Promise.resolve(null) : Promise.resolve(getFakeUserWithName(username))
-    })
-  }
+      return ignoreExistance
+        ? Promise.resolve(null)
+        : Promise.resolve(getFakeUserWithName(username));
+    }),
+  };
 
   const mockJwtService = {
-    signAsync: jest.fn().mockImplementation(payload => Promise.resolve('token'))
-  }
+    signAsync: jest
+      .fn()
+      .mockImplementation((payload) => Promise.resolve('token')),
+  };
 
   const mockRolesService = {
-    findByNames: jest.fn().mockImplementation((...roles) => Promise.resolve(getFakeRolesWithNames(roles)))
-  }
+    findByNames: jest
+      .fn()
+      .mockImplementation((...roles) =>
+        Promise.resolve(getFakeRolesWithNames(roles)),
+      ),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -49,20 +64,20 @@ describe('AuthService', () => {
         AuthService,
         {
           provide: RepositoryWrapper,
-          useValue: mockRepoWrapper
+          useValue: mockRepoWrapper,
         },
         {
           provide: UsersService,
-          useValue: mockUsersService
+          useValue: mockUsersService,
         },
         {
           provide: JwtService,
-          useValue: mockJwtService
+          useValue: mockJwtService,
         },
         {
           provide: RolesService,
-          useValue: mockRolesService
-        }
+          useValue: mockRolesService,
+        },
       ],
     }).compile();
 
@@ -76,7 +91,7 @@ describe('AuthService', () => {
   it('should login a user', async () => {
     const username = 'username';
     const password = 'password';
-    
+
     expect(await service.login(username, password)).toEqual('token');
     expect(mockUsersService.findByName).toBeCalledWith(username);
     expect(mockUsersService.findByName).toBeCalledTimes(1);
@@ -86,7 +101,7 @@ describe('AuthService', () => {
   it('should register a user', async () => {
     const username = 'username';
     const password = 'password';
-    
+
     expect(await service.register(username, password)).toEqual('token');
     expect(mockUsersService.findByName).toBeCalledWith(username, true);
     expect(mockUsersService.findByName).toBeCalledTimes(2);
@@ -102,13 +117,13 @@ const getFakeUserWithName = (username: string): User => {
     id: 1,
     username,
     hashPassword: 'hashPassword',
-    roles: []
-  }
-}
+    roles: [],
+  };
+};
 
 const getFakeRolesWithNames = (...roleNames: string[]): Role[] => {
   return roleNames.map((roleName, idx) => ({
     id: idx,
-    name: roleName
-  }))
-}
+    name: roleName,
+  }));
+};

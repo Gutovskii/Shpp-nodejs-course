@@ -1,4 +1,9 @@
-import { ArgumentsHost, Catch, ExceptionFilter, NotFoundException } from '@nestjs/common';
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  NotFoundException,
+} from '@nestjs/common';
 import { Response } from 'express';
 
 @Catch(NotFoundException)
@@ -8,12 +13,10 @@ export class NotFoundFilter implements ExceptionFilter {
     const res = ctx.getResponse<Response>();
     const status = exception.getStatus();
 
-    res
-      .status(status)
-      .json({
-        status,
-        error: 'Not Found',
-        message: 'From Custom Filter'
-      });
+    res.status(status).json({
+      status,
+      error: 'Not Found',
+      message: 'From Custom Filter',
+    });
   }
 }

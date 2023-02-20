@@ -12,27 +12,49 @@ describe('PeopleService', () => {
   let service: PeopleService;
 
   const mockRelationsService = {
-    addRelations: jest.fn().mockImplementation((entity, relations) => Promise.resolve(entity)),
-    removeRelations: jest.fn().mockImplementation((entity, relations) => Promise.resolve(entity))
-  }
+    addRelations: jest
+      .fn()
+      .mockImplementation((entity, relations) => Promise.resolve(entity)),
+    removeRelations: jest
+      .fn()
+      .mockImplementation((entity, relations) => Promise.resolve(entity)),
+  };
 
   const mockImagesService = {
-    createPublicImages: jest.fn().mockImplementation(images => Promise.resolve(getFakePublicImages())),
-    deletePublicImages: jest.fn().mockImplementation(images => Promise.resolve()),
-    createFileImages: jest.fn().mockImplementation(images => Promise.resolve(getFakeFileImages())),
-    deleteFileImages: jest.fn().mockImplementation(images => Promise.resolve())
-  }
+    createPublicImages: jest
+      .fn()
+      .mockImplementation((images) => Promise.resolve(getFakePublicImages())),
+    deletePublicImages: jest
+      .fn()
+      .mockImplementation((images) => Promise.resolve()),
+    createFileImages: jest
+      .fn()
+      .mockImplementation((images) => Promise.resolve(getFakeFileImages())),
+    deleteFileImages: jest
+      .fn()
+      .mockImplementation((images) => Promise.resolve()),
+  };
 
   const mockRepoWrapper = {
     people: {
-      findByPage: jest.fn().mockImplementation((page, count) => Promise.resolve(getFakePeopleByPage(page, count))),
-      findOne: jest.fn().mockImplementation(({where: { id }}) => Promise.resolve(getFakePersonWithId(id))),
-      create: jest.fn().mockImplementation(person => Promise.resolve(person)),
-      update: jest.fn().mockImplementation((id, person) => Promise.resolve({...person, id})),
-      remove: jest.fn().mockImplementation(person => Promise.resolve(person)),
-      save: jest.fn().mockImplementation(person => Promise.resolve(person))
-    }
-  }
+      findByPage: jest
+        .fn()
+        .mockImplementation((page, count) =>
+          Promise.resolve(getFakePeopleByPage(page, count)),
+        ),
+      findOne: jest
+        .fn()
+        .mockImplementation(({ where: { id } }) =>
+          Promise.resolve(getFakePersonWithId(id)),
+        ),
+      create: jest.fn().mockImplementation((person) => Promise.resolve(person)),
+      update: jest
+        .fn()
+        .mockImplementation((id, person) => Promise.resolve({ ...person, id })),
+      remove: jest.fn().mockImplementation((person) => Promise.resolve(person)),
+      save: jest.fn().mockImplementation((person) => Promise.resolve(person)),
+    },
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -40,19 +62,18 @@ describe('PeopleService', () => {
         PeopleService,
         {
           provide: ImagesService,
-          useValue: mockImagesService
+          useValue: mockImagesService,
         },
         {
           provide: RelationsService,
-          useValue: mockRelationsService
+          useValue: mockRelationsService,
         },
         {
           provide: RepositoryWrapper,
-          useValue: mockRepoWrapper
-        }
+          useValue: mockRepoWrapper,
+        },
       ],
-    })
-    .compile();
+    }).compile();
 
     service = module.get<PeopleService>(PeopleService);
   });
@@ -65,7 +86,9 @@ describe('PeopleService', () => {
     const page = 1;
     const count = 3;
 
-    expect(await service.findByPage(page, count)).toEqual(getFakePeopleByPage(page, count));
+    expect(await service.findByPage(page, count)).toEqual(
+      getFakePeopleByPage(page, count),
+    );
     expect(mockRepoWrapper.people.findByPage).toBeCalledTimes(1);
   });
 
@@ -74,7 +97,7 @@ describe('PeopleService', () => {
 
     expect(await service.findOne(id)).toEqual(getFakePersonWithId(id));
     expect(mockRepoWrapper.people.findOne).toBeCalledTimes(1);
-  })
+  });
 
   it('should check if a person exists', async () => {
     const id = 1;
@@ -96,9 +119,9 @@ describe('PeopleService', () => {
     const id = 1;
     const person = new Person();
 
-    expect(await service.update(id, person)).toEqual({...person, id});
+    expect(await service.update(id, person)).toEqual({ ...person, id });
     expect(mockRepoWrapper.people.update).toBeCalledTimes(1);
-  })
+  });
 
   it('should remove a person', async () => {
     const person = new Person();
@@ -121,9 +144,9 @@ describe('PeopleService', () => {
   it('should add relations to person', async () => {
     const person = new Person();
     const relations = {
-      films: [1,2,3],
-      homeworld: 1
-    }
+      films: [1, 2, 3],
+      homeworld: 1,
+    };
 
     expect(await service.addRelations(person, relations)).toEqual(person);
     expect(mockRepoWrapper.people.save).toBeCalledTimes(2);
@@ -132,18 +155,31 @@ describe('PeopleService', () => {
   it('should remove relations from person', async () => {
     const person = new Person();
     const relations = {
-      films: [1,2,3],
-      homeworld: 1
-    }
-    
+      films: [1, 2, 3],
+      homeworld: 1,
+    };
+
     expect(await service.removeRelations(person, relations)).toEqual(person);
     expect(mockRepoWrapper.people.save).toBeCalledTimes(3);
-  })
+  });
 });
 
 // ???
-const getFakePeopleByPage = (page: number, count: number): 
-  PaginationResult<Omit<Person, 'homeworld' | 'films' | 'starships' | 'vehicles' | 'species' | 'publicImages' | 'fileImages'>> => {
+const getFakePeopleByPage = (
+  page: number,
+  count: number,
+): PaginationResult<
+  Omit<
+    Person,
+    | 'homeworld'
+    | 'films'
+    | 'starships'
+    | 'vehicles'
+    | 'species'
+    | 'publicImages'
+    | 'fileImages'
+  >
+> => {
   return {
     partOfEntities: new Array(count).fill(null).map((person, idx) => ({
       id: idx + 1,
@@ -156,11 +192,11 @@ const getFakePeopleByPage = (page: number, count: number):
       hairColor: 'brown',
       skinColor: 'white',
       created: new Date('1337'),
-      edited: new Date('1337')
+      edited: new Date('1337'),
     })),
-    totalCount: count
-  }
-}
+    totalCount: count,
+  };
+};
 
 const getFakePersonWithId = (id: number): Person => {
   return {
@@ -181,37 +217,37 @@ const getFakePersonWithId = (id: number): Person => {
     publicImages: [],
     fileImages: [],
     created: new Date('1337'),
-    edited: new Date('1337')
-  }
-}
+    edited: new Date('1337'),
+  };
+};
 
 const getFakePublicImages = (): PublicImage[] => {
   return [
     {
       id: 1,
       url: 'https://nest-restful-swapi.s3.eu-north-1.amazonaws.com/not-a-png.png',
-      key: '1f45f82ae01eafd68c1337fe3bb1010w'
-    }, 
+      key: '1f45f82ae01eafd68c1337fe3bb1010w',
+    },
     {
       id: 2,
       url: 'https://nest-restful-swapi.s3.eu-north-1.amazonaws.com/tochno-ne-png.png',
-      key: '1f45f82ae01eafd68c5678fe3bb1337q'
-    }
+      key: '1f45f82ae01eafd68c5678fe3bb1337q',
+    },
   ];
-}
+};
 
 const getFakeFileImages = (): FileImage[] => {
   return [
     {
       id: 1,
-      fileName: '10e2772b-4147-4ad9-ac2b-cc61d5707418.png'
+      fileName: '10e2772b-4147-4ad9-ac2b-cc61d5707418.png',
     },
     {
       id: 2,
-      fileName: 'af6e0f1a-5341-40b2-aee0-c3fa5aec136f.png'
-    }
+      fileName: 'af6e0f1a-5341-40b2-aee0-c3fa5aec136f.png',
+    },
   ];
-}
+};
 
 const getFakeFiles = (): Express.Multer.File[] => {
   return [
@@ -225,7 +261,7 @@ const getFakeFiles = (): Express.Multer.File[] => {
       destination: 'destination',
       filename: 'filename',
       path: 'path',
-      buffer: null
-    }
+      buffer: null,
+    },
   ];
-}
+};

@@ -11,19 +11,39 @@ describe('RolesService', () => {
 
   const mockRepoWrapper = {
     roles: {
-      find: jest.fn().mockImplementation(request => Promise.resolve(getFakeRoles())),
-      findOne: jest.fn().mockImplementation(({where: {name: roleName}}) => Promise.resolve(getFakeRoleWithName(roleName))),
-      create: jest.fn().mockImplementation(role => Promise.resolve(getFakeRoleWithName(role.name))),
-      remove: jest.fn().mockImplementation(role => Promise.resolve(getFakeRoleWithName(role.name)))
+      find: jest
+        .fn()
+        .mockImplementation((request) => Promise.resolve(getFakeRoles())),
+      findOne: jest
+        .fn()
+        .mockImplementation(({ where: { name: roleName } }) =>
+          Promise.resolve(getFakeRoleWithName(roleName)),
+        ),
+      create: jest
+        .fn()
+        .mockImplementation((role) =>
+          Promise.resolve(getFakeRoleWithName(role.name)),
+        ),
+      remove: jest
+        .fn()
+        .mockImplementation((role) =>
+          Promise.resolve(getFakeRoleWithName(role.name)),
+        ),
     },
     users: {
-      updateMany: jest.fn().mockImplementation(users => Promise.resolve(users))
-    }
-  }
+      updateMany: jest
+        .fn()
+        .mockImplementation((users) => Promise.resolve(users)),
+    },
+  };
 
   const mockUsersService = {
-    findByRoles: jest.fn().mockImplementation(roles => Promise.resolve(getFakeUsersWithRoles(roles.map(role => role.name))))
-  }
+    findByRoles: jest
+      .fn()
+      .mockImplementation((roles) =>
+        Promise.resolve(getFakeUsersWithRoles(roles.map((role) => role.name))),
+      ),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -31,12 +51,12 @@ describe('RolesService', () => {
         RolesService,
         {
           provide: RepositoryWrapper,
-          useValue: mockRepoWrapper
+          useValue: mockRepoWrapper,
         },
         {
           provide: UsersService,
-          useValue: mockUsersService
-        }
+          useValue: mockUsersService,
+        },
       ],
     }).compile();
 
@@ -53,31 +73,41 @@ describe('RolesService', () => {
   });
 
   it('should find a role by name', async () => {
-    const roleName = Roles.USER
+    const roleName = Roles.USER;
 
-    expect(await service.findByName(roleName)).toEqual(getFakeRoleWithName(roleName));
+    expect(await service.findByName(roleName)).toEqual(
+      getFakeRoleWithName(roleName),
+    );
     expect(mockRepoWrapper.roles.findOne).toBeCalledTimes(1);
   });
 
   it('should find roles by names', async () => {
     const roleNames = [Roles.USER, Roles.ADMIN];
 
-    expect(await service.findByNames(...roleNames)).toEqual(getFakeRolesWithNames(...roleNames));
+    expect(await service.findByNames(...roleNames)).toEqual(
+      getFakeRolesWithNames(...roleNames),
+    );
     expect(mockRepoWrapper.roles.find).toBeCalledTimes(2);
   });
 
   it('should create a role', async () => {
     const roleName = Roles.USER;
 
-    expect(await service.create(getFakeRoleWithName(roleName))).toEqual(getFakeRoleWithName(roleName));
+    expect(await service.create(getFakeRoleWithName(roleName))).toEqual(
+      getFakeRoleWithName(roleName),
+    );
   });
 
   it('should delete a role', async () => {
     const roleName = 'GUEST';
 
-    const roleFindByNameSpy = jest.spyOn(service, 'findByName').mockReturnValue(Promise.resolve(getFakeRoleWithName(roleName)));
+    const roleFindByNameSpy = jest
+      .spyOn(service, 'findByName')
+      .mockReturnValue(Promise.resolve(getFakeRoleWithName(roleName)));
 
-    expect(await service.delete(roleName)).toEqual(getFakeRoleWithName(roleName));
+    expect(await service.delete(roleName)).toEqual(
+      getFakeRoleWithName(roleName),
+    );
     expect(roleFindByNameSpy).toBeCalledTimes(2);
     expect(mockUsersService.findByRoles).toBeCalledWith([roleName]);
     expect(mockUsersService.findByRoles).toBeCalledTimes(1);
@@ -90,46 +120,48 @@ const getFakeRoles = (): Role[] => {
   return [
     {
       id: 1,
-      name: Roles.USER
+      name: Roles.USER,
     },
     {
       id: 2,
-      name: Roles.ADMIN
-    }
+      name: Roles.ADMIN,
+    },
   ];
-}
+};
 
 const getFakeRolesWithNames = (...roleNames: string[]): Role[] => {
   return roleNames.map((roleName, idx) => ({
     id: idx + 1,
-    name: roleName
+    name: roleName,
   }));
-}
+};
 
 const getFakeUsersWithRoles = (...roleNames: string[]): User[] => {
-  return [{
-    id: 1,
-    username: 'Himars',
-    hashPassword: 'very hashed password',
-    roles: roleNames.map((roleName, idx) => ({
-      id: idx + 1,
-      name: roleName
-    }))
-  }, 
-  {
-    id: 2,
-    username: 'Leopard 2',
-    hashPassword: 'sehr gehashtes Passwort',
-    roles: roleNames.map((roleName, idx) => ({
-      id: idx + 1,
-      name: roleName
-    }))
-  }];
-}
+  return [
+    {
+      id: 1,
+      username: 'Himars',
+      hashPassword: 'very hashed password',
+      roles: roleNames.map((roleName, idx) => ({
+        id: idx + 1,
+        name: roleName,
+      })),
+    },
+    {
+      id: 2,
+      username: 'Leopard 2',
+      hashPassword: 'sehr gehashtes Passwort',
+      roles: roleNames.map((roleName, idx) => ({
+        id: idx + 1,
+        name: roleName,
+      })),
+    },
+  ];
+};
 
 const getFakeRoleWithName = (roleName: string): Role => {
   return {
     id: 1,
-    name: roleName
-  }
-}
+    name: roleName,
+  };
+};

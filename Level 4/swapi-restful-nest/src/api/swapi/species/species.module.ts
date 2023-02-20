@@ -4,7 +4,7 @@ import { SpeciesController } from './species.controller';
 import { SpeciesProfile } from './species.profile';
 
 @Module({
-    controllers: [SpeciesController],
-    providers: [SpeciesService, SpeciesProfile],
+  controllers: [SpeciesController],
+  providers: [SpeciesService, SpeciesProfile],
 })
 export class SpeciesModule {}

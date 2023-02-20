@@ -1,6 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class AddImagesDto {
-    @ApiProperty({ type: 'string', format: 'binary', isArray: true })
-    readonly images: Express.Multer.File[]
+  @ApiProperty({ type: 'string', format: 'binary', isArray: true })
+  readonly images: Express.Multer.File[];
 }

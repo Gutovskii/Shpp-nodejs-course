@@ -10,18 +10,34 @@ describe('UsersController', () => {
   let controller: UsersController;
 
   const mockUsersService = {
-    findByPage: jest.fn().mockImplementation((page, count) => Promise.resolve(getFakeUsersByPage(page, count))),
-    findByName: jest.fn().mockImplementation(username => Promise.resolve(getFakeUserWithName(username))),
-    deleteByName: jest.fn().mockImplementation(username => Promise.resolve(getFakeUserWithName(username))),
-    addRole: jest.fn().mockImplementation((username, roleName) => Promise.resolve({
-      ...getFakeUserWithName(username),
-      roles: [getFakeRoleWithName(roleName)]
-    })),
-    removeRole: jest.fn().mockImplementation((username, roleName) => Promise.resolve({
-      ...getFakeUserWithName(username),
-      roles: [getFakeRoleWithName(Roles.USER)]
-    }))
-  }
+    findByPage: jest
+      .fn()
+      .mockImplementation((page, count) =>
+        Promise.resolve(getFakeUsersByPage(page, count)),
+      ),
+    findByName: jest
+      .fn()
+      .mockImplementation((username) =>
+        Promise.resolve(getFakeUserWithName(username)),
+      ),
+    deleteByName: jest
+      .fn()
+      .mockImplementation((username) =>
+        Promise.resolve(getFakeUserWithName(username)),
+      ),
+    addRole: jest.fn().mockImplementation((username, roleName) =>
+      Promise.resolve({
+        ...getFakeUserWithName(username),
+        roles: [getFakeRoleWithName(roleName)],
+      }),
+    ),
+    removeRole: jest.fn().mockImplementation((username, roleName) =>
+      Promise.resolve({
+        ...getFakeUserWithName(username),
+        roles: [getFakeRoleWithName(Roles.USER)],
+      }),
+    ),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -29,8 +45,8 @@ describe('UsersController', () => {
       providers: [
         {
           provide: UsersService,
-          useValue: mockUsersService
-        }
+          useValue: mockUsersService,
+        },
       ],
     }).compile();
 
@@ -45,21 +61,27 @@ describe('UsersController', () => {
     const page = 1;
     const count = 3;
 
-    expect(await controller.findByPage(page, count)).toEqual(getFakeUsersByPage(page, count));
+    expect(await controller.findByPage(page, count)).toEqual(
+      getFakeUsersByPage(page, count),
+    );
     expect(mockUsersService.findByPage).toBeCalledTimes(1);
   });
 
   it('should find a user by username', async () => {
     const username = 'username';
 
-    expect(await controller.findByName(username)).toEqual(getFakeUserWithName(username));
+    expect(await controller.findByName(username)).toEqual(
+      getFakeUserWithName(username),
+    );
     expect(mockUsersService.findByName).toBeCalledTimes(1);
   });
 
   it('should delete a user by username', async () => {
     const username = 'username';
 
-    expect(await controller.deleteUser(username)).toEqual(getFakeUserWithName(username));
+    expect(await controller.deleteUser(username)).toEqual(
+      getFakeUserWithName(username),
+    );
     expect(mockUsersService.deleteByName).toBeCalledTimes(1);
   });
 
@@ -69,7 +91,7 @@ describe('UsersController', () => {
 
     expect(await controller.addRole(username, roleName)).toEqual({
       ...getFakeUserWithName(username),
-      roles: [getFakeRoleWithName(roleName)]
+      roles: [getFakeRoleWithName(roleName)],
     });
     expect(mockUsersService.addRole).toBeCalledTimes(1);
   });
@@ -80,36 +102,38 @@ describe('UsersController', () => {
 
     expect(await controller.removeRole(username, roleName)).toEqual({
       ...getFakeUserWithName(username),
-      roles: [getFakeRoleWithName(Roles.USER)]
+      roles: [getFakeRoleWithName(Roles.USER)],
     });
     expect(mockUsersService.removeRole).toBeCalledTimes(1);
   });
 });
 
-const getFakeUsersByPage = (page: number, count: number): 
-  PaginationResult<Omit<User, 'roles'>> => {
+const getFakeUsersByPage = (
+  page: number,
+  count: number,
+): PaginationResult<Omit<User, 'roles'>> => {
   return {
     partOfEntities: new Array(count).fill(null).map((person, idx) => ({
       id: idx + 1,
       username: 'veryUniqueUsername',
-      hashPassword: 'veryHashedPassword'
+      hashPassword: 'veryHashedPassword',
     })),
-    totalCount: count
-  }
-}
+    totalCount: count,
+  };
+};
 
 const getFakeUserWithName = (username: string): User => {
   return {
     id: 1,
     username,
     hashPassword: 'hashPassword',
-    roles: []
-  }
-}
+    roles: [],
+  };
+};
 
 const getFakeRoleWithName = (roleName: string): Role => {
   return {
     id: 1,
-    name: roleName
-  }
-}
+    name: roleName,
+  };
+};

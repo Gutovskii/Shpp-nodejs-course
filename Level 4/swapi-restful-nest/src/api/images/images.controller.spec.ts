@@ -7,16 +7,18 @@ describe('ImagesController', () => {
   let controller: ImagesController;
 
   const mockImagesService = {
-    deleteImagesByIds: jest.fn().mockImplementation(dto => Promise.resolve())
-  }
+    deleteImagesByIds: jest.fn().mockImplementation((dto) => Promise.resolve()),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ImagesController],
-      providers: [{
-        provide: ImagesService,
-        useValue: mockImagesService
-      }]
+      providers: [
+        {
+          provide: ImagesService,
+          useValue: mockImagesService,
+        },
+      ],
     }).compile();
 
     controller = module.get<ImagesController>(ImagesController);
@@ -27,12 +29,14 @@ describe('ImagesController', () => {
   });
 
   it('should delete images by ids', async () => {
-    expect(await controller.deleteImagesByIds(getFakeDeleteImagesDto())).toBeUndefined();
+    expect(
+      await controller.deleteImagesByIds(getFakeDeleteImagesDto()),
+    ).toBeUndefined();
   });
 });
 
 const getFakeDeleteImagesDto = (): DeleteImagesDto => {
   return {
-    imagesIds: [1, 2, 3]
-  }
-}
+    imagesIds: [1, 2, 3],
+  };
+};

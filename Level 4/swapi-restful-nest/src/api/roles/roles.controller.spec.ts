@@ -1,4 +1,3 @@
-import { getMapperToken } from '@automapper/nestjs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Role } from './role.entity';
 import { RolesController } from './roles.controller';
@@ -9,9 +8,15 @@ describe('RolesController', () => {
   let controller: RolesController;
 
   const mockRolesService = {
-    findAll: jest.fn().mockImplementation(() => Promise.resolve(getFakeRoles())),
-    delete: jest.fn().mockImplementation(roleName => Promise.resolve(getFakeRoleWithName(roleName)))
-  }
+    findAll: jest
+      .fn()
+      .mockImplementation(() => Promise.resolve(getFakeRoles())),
+    delete: jest
+      .fn()
+      .mockImplementation((roleName) =>
+        Promise.resolve(getFakeRoleWithName(roleName)),
+      ),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -19,9 +24,9 @@ describe('RolesController', () => {
       providers: [
         {
           provide: RolesService,
-          useValue: mockRolesService
-        }
-      ]
+          useValue: mockRolesService,
+        },
+      ],
     }).compile();
 
     controller = module.get<RolesController>(RolesController);
@@ -39,7 +44,9 @@ describe('RolesController', () => {
   it('should delete a role', async () => {
     const roleName = 'GUEST';
 
-    expect(await controller.deleteRole(roleName)).toEqual(getFakeRoleWithName(roleName));
+    expect(await controller.deleteRole(roleName)).toEqual(
+      getFakeRoleWithName(roleName),
+    );
     expect(mockRolesService.delete).toBeCalledTimes(1);
   });
 });
@@ -48,18 +55,18 @@ const getFakeRoles = (): Role[] => {
   return [
     {
       id: 1,
-      name: Roles.USER
+      name: Roles.USER,
     },
     {
       id: 2,
-      name: Roles.ADMIN
-    }
+      name: Roles.ADMIN,
+    },
   ];
-}
+};
 
 const getFakeRoleWithName = (roleName: string): Role => {
   return {
     id: 1,
-    name: roleName
-  }
-}
+    name: roleName,
+  };
+};

@@ -1,3 +1,3 @@
 export interface EntityInterface {
-    id: number
+  id: number;
 }

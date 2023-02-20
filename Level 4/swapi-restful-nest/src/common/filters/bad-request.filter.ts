@@ -1,4 +1,9 @@
-import { ArgumentsHost, BadRequestException, Catch, ExceptionFilter } from '@nestjs/common';
+import {
+  ArgumentsHost,
+  BadRequestException,
+  Catch,
+  ExceptionFilter,
+} from '@nestjs/common';
 import { Response } from 'express';
 
 @Catch(BadRequestException)
@@ -8,12 +13,10 @@ export class BadRequestFilter implements ExceptionFilter {
     const res = ctx.getResponse<Response>();
     const status = exception.getStatus();
 
-    res
-      .status(status)
-      .json({
-        status,
-        error: 'Bad Request',
-        message: 'From Custom Filter'
-      });
+    res.status(status).json({
+      status,
+      error: 'Bad Request',
+      message: 'From Custom Filter',
+    });
   }
 }

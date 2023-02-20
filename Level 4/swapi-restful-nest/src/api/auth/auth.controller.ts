@@ -11,19 +11,19 @@ import { LocalRegisterAuthGuard } from './guards/local-register-auth.guard';
 @ApiTags('auth')
 @ApiExtraModels(TokenDto)
 export class AuthController {
-    @Post('login')
-    @ApiResponseData(TokenDto)
-    @ApiBody({type: AuthDto})
-    @UseGuards(LocalLoginAuthGuard)
-    async login(@PassportResult() tokenDto: TokenDto) {
-        return tokenDto;
-    }
+  @Post('login')
+  @ApiResponseData(TokenDto)
+  @ApiBody({ type: AuthDto })
+  @UseGuards(LocalLoginAuthGuard)
+  async login(@PassportResult() tokenDto: TokenDto) {
+    return tokenDto;
+  }
 
-    @Post('register')
-    @ApiResponseData(TokenDto)
-    @ApiBody({type: AuthDto})
-    @UseGuards(LocalRegisterAuthGuard)
-    async register(@PassportResult() tokenDto: TokenDto) {
-        return tokenDto;
-    }
+  @Post('register')
+  @ApiResponseData(TokenDto)
+  @ApiBody({ type: AuthDto })
+  @UseGuards(LocalRegisterAuthGuard)
+  async register(@PassportResult() tokenDto: TokenDto) {
+    return tokenDto;
+  }
 }

@@ -7,13 +7,13 @@ import { StarshipsModule } from './starships/starships.module';
 import { VehiclesModule } from './vehicles/vehicles.module';
 
 @Module({
-    imports: [
-        FilmsModule,
-        PeopleModule,
-        PlanetsModule,
-        SpeciesModule,
-        StarshipsModule,
-        VehiclesModule
-    ]
+  imports: [
+    FilmsModule,
+    PeopleModule,
+    PlanetsModule,
+    SpeciesModule,
+    StarshipsModule,
+    VehiclesModule,
+  ],
 })
 export class SwapiModule {}

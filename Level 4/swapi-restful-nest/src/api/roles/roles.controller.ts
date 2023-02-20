@@ -13,19 +13,17 @@ import { RolesService } from './roles.service';
 @RolesAccess(Roles.ADMIN)
 @UseGuards(JwtAuthGuard)
 export class RolesController {
-    constructor(
-        private _rolesService: RolesService
-    ) {}
-    
-    @Get()
-    @ApiResponseData(Role)
-    async findAll() {
-        return this._rolesService.findAll();
-    }
+  constructor(private _rolesService: RolesService) {}
 
-    @Delete(':roleName')
-    @ApiResponseData(Role)
-    async deleteRole(@Param('roleName') roleName: string) {
-        return this._rolesService.delete(roleName);
-    }
+  @Get()
+  @ApiResponseData(Role)
+  async findAll() {
+    return this._rolesService.findAll();
+  }
+
+  @Delete(':roleName')
+  @ApiResponseData(Role)
+  async deleteRole(@Param('roleName') roleName: string) {
+    return this._rolesService.delete(roleName);
+  }
 }

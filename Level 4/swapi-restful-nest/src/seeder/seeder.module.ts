@@ -1,7 +1,13 @@
-import { Module } from "@nestjs/common";
-import { SwapiSeederService } from "./seeders/swapi-seeder.service";
+import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
+import { SwapiSeederService } from './seeders/swapi-seeder.service';
 
 @Module({
-    providers: [SwapiSeederService]
+  imports: [
+    HttpModule.register({
+      baseURL: 'https://swapi/dev/api/',
+    }),
+  ],
+  providers: [SwapiSeederService],
 })
 export class SeederModule {}

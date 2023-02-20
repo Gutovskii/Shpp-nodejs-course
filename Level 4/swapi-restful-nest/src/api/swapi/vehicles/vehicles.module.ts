@@ -4,7 +4,7 @@ import { VehiclesController } from './vehicles.controller';
 import { VehiclesProfile } from './vehicles.profile';
 
 @Module({
-    controllers: [VehiclesController],
-    providers: [VehiclesService, VehiclesProfile],
+  controllers: [VehiclesController],
+  providers: [VehiclesService, VehiclesProfile],
 })
 export class VehiclesModule {}

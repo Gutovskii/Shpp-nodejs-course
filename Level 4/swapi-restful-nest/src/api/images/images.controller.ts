@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, HttpCode, HttpStatus, UseGuards, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { DeleteImagesDto } from 'src/api/images/dto/delete-images.dto';
 import { RolesAccess } from '../auth/decorators/auth.decorator';
@@ -15,13 +23,11 @@ import { ImagesService } from './images.service';
 @RolesAccess(Roles.ADMIN)
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class ImagesController {
-    constructor(
-        private readonly _imagesService: ImagesService
-    ) {}
+  constructor(private readonly _imagesService: ImagesService) {}
 
-    @Delete()
-    @HttpCode(HttpStatus.NO_CONTENT)
-    async deleteImagesByIds(@Body(ValidationPipe) dto: DeleteImagesDto) {
-        await this._imagesService.deleteImagesByIds(dto.imagesIds);
-    }
+  @Delete()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteImagesByIds(@Body(ValidationPipe) dto: DeleteImagesDto) {
+    await this._imagesService.deleteImagesByIds(dto.imagesIds);
+  }
 }

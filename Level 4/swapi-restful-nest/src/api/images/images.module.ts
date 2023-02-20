@@ -10,11 +10,11 @@ import { S3 } from 'aws-sdk';
     ImagesService,
     {
       provide: S3,
-      useValue: new S3()
-    }
+      useValue: new S3(),
+    },
   ],
   exports: [ImagesService],
   imports: [RepositoryModule],
-  controllers: [ImagesController]
+  controllers: [ImagesController],
 })
 export class ImagesModule {}

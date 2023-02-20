@@ -3,7 +3,7 @@ import { RepositoryWrapper } from './repository.wrapper';
 
 @Global()
 @Module({
-    providers: [RepositoryWrapper],
-    exports: [RepositoryWrapper]
+  providers: [RepositoryWrapper],
+  exports: [RepositoryWrapper],
 })
 export class RepositoryModule {}

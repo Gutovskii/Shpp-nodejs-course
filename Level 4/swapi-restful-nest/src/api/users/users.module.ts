@@ -4,9 +4,9 @@ import { UsersController } from './users.controller';
 import { RolesModule } from '../roles/roles.module';
 
 @Module({
-    controllers: [UsersController],
-    providers: [UsersService],
-    exports: [UsersService],
-    imports: [forwardRef(() => RolesModule)]
+  controllers: [UsersController],
+  providers: [UsersService],
+  exports: [UsersService],
+  imports: [forwardRef(() => RolesModule)],
 })
 export class UsersModule {}

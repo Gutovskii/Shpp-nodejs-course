@@ -6,26 +6,43 @@ import { RepositoryWrapper } from 'src/repository/repository.wrapper';
 import { RelationsService } from './relations.service';
 
 const mockRepo = {
-  findOne: jest.fn()
+  findOne: jest
+    .fn()
     // addRelations
-    .mockImplementationOnce(({where: {id}}) => Promise.resolve(getFakeFilmWithId(id)))
-    .mockImplementationOnce(({where: {id}}) => Promise.resolve(getFakeFilmWithId(id)))
-    .mockImplementationOnce(({where: {id}}) => Promise.resolve(getFakeFilmWithId(id)))
-    .mockImplementationOnce(({where: {id}}) => Promise.resolve(getFakePlanetWithId(id)))
+    .mockImplementationOnce(({ where: { id } }) =>
+      Promise.resolve(getFakeFilmWithId(id)),
+    )
+    .mockImplementationOnce(({ where: { id } }) =>
+      Promise.resolve(getFakeFilmWithId(id)),
+    )
+    .mockImplementationOnce(({ where: { id } }) =>
+      Promise.resolve(getFakeFilmWithId(id)),
+    )
+    .mockImplementationOnce(({ where: { id } }) =>
+      Promise.resolve(getFakePlanetWithId(id)),
+    )
     // removeRelations
-    .mockImplementationOnce(({where: {id}}) => Promise.resolve(getFakeFilmWithId(id)))
-    .mockImplementationOnce(({where: {id}}) => Promise.resolve(getFakeFilmWithId(id)))
-    .mockImplementationOnce(({where: {id}}) => Promise.resolve(getFakeFilmWithId(id)))
-    .mockImplementationOnce(({where: {id}}) => Promise.resolve(getFakePlanetWithId(id)))
-}
+    .mockImplementationOnce(({ where: { id } }) =>
+      Promise.resolve(getFakeFilmWithId(id)),
+    )
+    .mockImplementationOnce(({ where: { id } }) =>
+      Promise.resolve(getFakeFilmWithId(id)),
+    )
+    .mockImplementationOnce(({ where: { id } }) =>
+      Promise.resolve(getFakeFilmWithId(id)),
+    )
+    .mockImplementationOnce(({ where: { id } }) =>
+      Promise.resolve(getFakePlanetWithId(id)),
+    ),
+};
 
 describe('RelationsService', () => {
   let service: RelationsService;
 
   const mockRepoWrapper = {
     films: mockRepo,
-    planets: mockRepo
-  }
+    planets: mockRepo,
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -33,8 +50,8 @@ describe('RelationsService', () => {
         RelationsService,
         {
           provide: RepositoryWrapper,
-          useValue: mockRepoWrapper
-        }
+          useValue: mockRepoWrapper,
+        },
       ],
     }).compile();
 
@@ -48,37 +65,39 @@ describe('RelationsService', () => {
   it('should add relations to an entity', async () => {
     const relations = {
       films: [15, 30, 45],
-      homeworld: 42
-    }
+      homeworld: 42,
+    };
 
     expect(await service.addRelations(getFakePerson(), relations)).toEqual({
       ...getFakePerson(),
       films: [
-        getFakeFilmWithId(relations.films[0]), 
-        getFakeFilmWithId(relations.films[1]), 
-        getFakeFilmWithId(relations.films[2])
+        getFakeFilmWithId(relations.films[0]),
+        getFakeFilmWithId(relations.films[1]),
+        getFakeFilmWithId(relations.films[2]),
       ],
-      homeworld: getFakePlanetWithId(relations.homeworld)
+      homeworld: getFakePlanetWithId(relations.homeworld),
     });
   });
 
   it('should remove relations from an entity', async () => {
     const relations = {
       films: [15, 30, 45],
-      homeworld: 42
-    }
+      homeworld: 42,
+    };
 
     const testEntity: Person = {
       ...getFakePerson(),
       films: [
-        getFakeFilmWithId(relations.films[0]), 
-        getFakeFilmWithId(relations.films[1]), 
-        getFakeFilmWithId(relations.films[2])
+        getFakeFilmWithId(relations.films[0]),
+        getFakeFilmWithId(relations.films[1]),
+        getFakeFilmWithId(relations.films[2]),
       ],
-      homeworld: getFakePlanetWithId(relations.homeworld)
-    }
+      homeworld: getFakePlanetWithId(relations.homeworld),
+    };
 
-    expect(await service.removeRelations(testEntity, relations)).toEqual(getFakePerson());
+    expect(await service.removeRelations(testEntity, relations)).toEqual(
+      getFakePerson(),
+    );
   });
 });
 
@@ -101,9 +120,9 @@ const getFakePerson = (): Person => {
     publicImages: [],
     fileImages: [],
     created: new Date('1337'),
-    edited: new Date('1337')
-  }
-}
+    edited: new Date('1337'),
+  };
+};
 
 const getFakeFilmWithId = (id: number): Film => {
   return {
@@ -122,9 +141,9 @@ const getFakeFilmWithId = (id: number): Film => {
     publicImages: [],
     fileImages: [],
     created: new Date('1337'),
-    edited: new Date('1337')
-  }
-}
+    edited: new Date('1337'),
+  };
+};
 
 const getFakePlanetWithId = (id: number): Planet => {
   return {
@@ -144,6 +163,6 @@ const getFakePlanetWithId = (id: number): Planet => {
     publicImages: [],
     fileImages: [],
     created: new Date('1337'),
-    edited: new Date('1337')
-  }
-}
+    edited: new Date('1337'),
+  };
+};
